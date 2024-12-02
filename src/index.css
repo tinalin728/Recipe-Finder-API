@@ -1,0 +1,40 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+
+    body {
+        @apply bg-default
+    }
+
+    .max-w-container {
+        max-width: 85rem;
+        margin: 0 auto;
+        padding: 0 2rem;
+    }
+
+    input[placeholder] {
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        /* Ensures text stays on a single line */
+        overflow: hidden;
+        /* Hides the overflow content */
+    }
+
+    h1 {
+        @apply text-3xl text-primary-darker
+    }
+
+    h2 {
+        @apply text-2xl
+    }
+
+    h3 {
+        @apply text-xl
+    }
+
+    p {
+        @apply text-dark-blue
+    }
+}
