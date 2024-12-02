@@ -1,95 +1,144 @@
 import React, { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom';
+
+import RecipeCard from '../components/RecipeCard';
 import banner from '../assets/banner.jpg'
 import IonIcon from '@reacticons/ionicons';
-import RecipeCard from '../components/RecipeCard';
+import placeholder from '../assets/noImg.jpg'
 
-export default function Home() {
+export default function Home({ favs, toggleFav }) {
+
+    const [recipes, setRecipes] = useState([]);
+    const [currentKeyIndex, setCurrentKeyIndex] = useState(0);
 
     const [popular, setPopular] = useState([]);
 
     useEffect(() => {
-        getPopular();
-    }, []);
-    //async = wants to make sure that we have the data first
-    const getPopular = async () => {
-        const apiKey = 'c276f010d69c41c08d51f0459cdbdf4f';
-        const api = await fetch(`https://api.spoonacular.com/recipes/random?apiKey=${apiKey}&number=10`)
+        const fetchRecipes = async () => {
+            const storedPopular = localStorage.getItem('popular-recipes');
 
-        const data = await api.json();
-        setPopular(data.recipes)
-        console.log(data)
+            if (storedPopular) {
+                // Use cached data from localStorage
+                setPopular(JSON.parse(storedPopular));
+                console.log('Loaded popular recipes from local storage');
+            } else {
+                // Fetch from API if no data in localStorage
+                try {
+                    const apiKey = '94223c8104e6456d88cf145ec6ecdf6b';
+                    const apiKey2 = 'cf116ecafaab4cda83a585339c3346de';
+                    const api = await fetch(
+                        `https://api.spoonacular.com/recipes/random?apiKey=${apiKey2}&number=12`
+                    );
+
+                    const data = await api.json();
+                    setPopular(data.recipes);
+
+                    // Save data to localStorage
+                    localStorage.setItem('popular-recipes', JSON.stringify(data.recipes));
+                    console.log('Fetched and saved popular recipes to local storage');
+                } catch (error) {
+                    console.error('Error fetching recipes:', error);
+                }
+            }
+        };
+
+        fetchRecipes();
+    }, []);
+
+
+    // const apiKeys = [
+    //     '94223c8104e6456d88cf145ec6ecdf6b',
+    //     'cf116ecafaab4cda83a585339c3346de'
+    // ];
+
+    // let currentKeyIndex = 0;
+
+    // const getRecipes = async () => {
+    //     if (currentKeyIndex >= apiKeys.length) {
+    //         console.error('All API keys have been exhausted.');
+    //         return;
+    //     }
+
+    //     const apiKey = apiKeys[currentKeyIndex];
+
+    //     try {
+    //         const response = await fetch(`https://api.spoonacular.com/recipes/random?apiKey=${apiKey}&number=12`);
+    //         if (response.status === 402) {
+    //             console.warn(`API key ${apiKey} exceeded limit. Switching to the next key...`);
+    //             currentKeyIndex++;
+    //             return getRecipes(); // Retry with the next key
+    //         } else if (response.ok) {
+    //             const data = await response.json();
+    //             console.log('Fetched recipes:', data.recipes);
+    //             return data.recipes;
+    //         } else {
+    //             console.error('Error fetching recipes:', response.statusText);
+    //         }
+    //     } catch (error) {
+    //         console.error('Error:', error);
+    //     }
+    // };
+
+    // getRecipes();
+
+    const bannerBg = {
+        backgroundImage: `url(${banner})`,
+        backgroundSize: 'cover',
+        backgroundPosition: 'center',
+        backgroundRepeat: 'no-repeat',
+
     }
 
     return (
         <>
-            <section className='relative w-full h-full'>
-                <img src={banner} alt="food" className='w-full relative' />
-                <div className='absolute inset-0 bg-black bg-opacity-50 flex justify-center items-center'>
-                    <div className="rounded-xl bg-custom-gradient p-[1px]">
-                        <div className="p-4 bg-default rounded-xl">
-                            <label className='text-dark-blue'>What are you in the mood to cook today?</label>
-                            <div className="flex mt-2">
-                                <div className="relative overflow-hidden w-full rounded-md mr-2">
-                                    <input
-                                        type="text"
-                                        className="relative z-10 pl-3 pr-10  h-full bg-default rounded-md focus:outline-none focus:bg-[#f0f4fa] shadow-inner-combined w-[350px] placeholder:text-[#6d7f8f]"
-                                        placeholder="Search Your Cravings"
-                                    />
-                                </div>
-
-                                <button className="Icon min-w-[46px] min-h-[46px] flex justify-center items-center rounded-xl shadow-custom mr-4 ">
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#657789" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" className="feather feather-search"><circle cx="11" cy="11" r="8" /><line x1="21" y1="21" x2="16.65" y2="16.65" /></svg>
-                                </button>
-                            </div>
-                        </div>
+            <section className='relative w-full h-[50vh]' style={bannerBg}>
+                <div className='absolute inset-0 bg-black bg-opacity-60 flex flex-col justify-center items-center'>
+                    <div className='max-w-container text-center'>
+                        <h1 className='text-white mb-4'>Running out of ideas to cook? </h1>
+                        <h1 className='text-green'>Unleash Your Culinary Creativity here</h1>
                     </div>
                 </div>
             </section>
-            <section className='py-10'>
+            <section className='pt-10'>
+                <div className='max-w-container mt-6'>
+                    <div className='w-full flex justify-center items-center'>
+                        <input type="text" placeholder='Search Your Cravings' className='w-full pl-4 py-4 border border-black focus:outline-none' />
+
+                        <button className='h-[3.6rem] w-[3.6rem] flex items-center justify-center bg-white border border-black'>
+                            <IonIcon name='search' className='text-3xl' />
+                        </button>
+                    </div>
+                    <p>Popular Search Terms: Pasta, Chicken Teriyaki</p>
+
+                </div>
+            </section>
+
+            <section className='pt-10'>
                 <div className='max-w-container'>
-                    <h1>Recommended Recipes </h1>
-                    <p> Popular Choices</p>
+                    <div className='text-left pb-10'>
+                        <h2>Recommended Recipes </h2>
+                        <p> Popular Choices</p>
+                    </div>
 
-                    <div className='grid gap-3 grid-cols-1 md:grid-cols-2 lg:grid-cols-3'>
+                    <div className='grid gap-6 grid-cols-1 md:grid-cols-2 lg:grid-cols-3'>
+                        {popular.map((recipe) => {
+                            //console.log(favs[recipe.id]) //if toggled, would return true
 
-                        {popular.map((recipe, index) => {
                             return (
-                                <div key={index} className='flex flex-col rounded-md bg-white overflow-hidden relative shadow-sm'>
-                                    <Link to='/' className='relative h-[300px]'>
-                                        <img src={recipe.image} alt="recipe image" className='w-full h-full object-cover cursor-pointer rounded-md' />
+                                <RecipeCard
+                                    key={recipe.id}
+                                    recipe={recipe}
+                                    placeholder={placeholder}
 
-                                        <div className='absolute top-3 right-4 rounded-full h-12 w-12 flex justify-center items-center bg-icon-primary shadow-md'>
-                                            <IonIcon name='heart' className='text-3xl text-white hover:text-red-100' />
-                                        </div>
-                                    </Link>
-                                    <div className='px-6 py-4'>
-                                        {recipe.cuisines && recipe.cuisines.length > 0 ? (
-                                            <p className='my-2'>
-                                                {recipe.cuisines.map((cuisine, index) => (
-                                                    <span key={index}> {cuisine}</span>
-                                                ))}
-                                            </p>
-                                        ) : (
-                                            <p> Chef’s secret recipe </p>
-                                        )}
+                                    //some() method tests 'is this recipe in the favs?'
+                                    isFavorite={favs.some((fav) => fav.id === recipe.id)}
 
-                                        <h3 className='mb-4 font-bold tracking-wide'>{recipe.title}</h3>
-
-
-                                        <div className='flex gap-2 mt-auto'>
-                                            {recipe.diets.slice(0, 3).map((diet, index) => (
-                                                <div key={index} className='px-2 py-1 bg-primary rounded-md'>
-                                                    <p className='text-white'> {diet}</p>
-                                                </div>
-                                            ))}
-                                        </div>
-                                    </div>
-                                </div>
+                                    //pass the toggleFav function
+                                    handleFavClick={toggleFav}
+                                />
                             )
                         })}
                     </div>
-
                 </div>
             </section>
         </>

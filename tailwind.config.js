@@ -6,7 +6,19 @@ export default {
   ],
   theme: {
     extend: {
+      borderColor: {
+        DEFAULT: 'black'
+      },
       colors: {
+        'green': '#63FE5B',
+        'green-darker': '#276524',
+        'beige-lighter': '#eeeeee',
+        'beige': '#F3F0E6',
+        'dark': '#2c2a27',
+        'red': '#FE5B63',
+        'purple': '#F65BFE',
+
+
         'default': '#e3edf7',
         'icon-primary': '#657789',
         'primary': '#8FAADC',
