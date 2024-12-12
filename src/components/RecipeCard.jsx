@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useParams } from 'react-router-dom';
 import IonIcon from '@reacticons/ionicons';
 
 const RecipeCard = ({ recipe, placeholder, handleFavClick, isFavorite }) => {
@@ -9,6 +9,8 @@ const RecipeCard = ({ recipe, placeholder, handleFavClick, isFavorite }) => {
     // const handleFavClick = () => {
     //     setIsToggle((prev) => !prev)
     // }
+
+
 
     return (
         <div className='flex flex-col bg-white overflow-hidden relative shadow-sm border border-dark'>
@@ -20,7 +22,7 @@ const RecipeCard = ({ recipe, placeholder, handleFavClick, isFavorite }) => {
                 <button
                     onClick={(e) => {
                         e.stopPropagation();
-                        handleFavClick(recipe);
+                        handleFavClick(recipe.id);
                     }}
                     className='absolute top-0 right-4 h-14 w-12 flex justify-center items-center bg-dark bg-opacity-60 shadow-md'>
                     <IonIcon name='heart'
@@ -52,7 +54,8 @@ const RecipeCard = ({ recipe, placeholder, handleFavClick, isFavorite }) => {
                         <IonIcon name='alarm' className='text-3xl text-green-darker' />
                         <p> {recipe.readyInMinutes} Mins</p>
                     </div>
-                    <Link to={`/recipe/${recipe.id}`} state={{ recipe }}
+                    <Link to={`/recipe/${recipe.id}`}
+                        state={{ recipe }}
                         className='flex items-center border-l border-black px-6 py-4bg-beige-lighter hover:bg-green transition duration-300'>
                         View Now
                     </Link>

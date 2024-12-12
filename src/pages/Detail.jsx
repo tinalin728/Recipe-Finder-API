@@ -1,34 +1,34 @@
 import React, { useEffect, useState } from 'react'
 import { useParams, useLocation } from 'react-router-dom'
 import IonIcon from '@reacticons/ionicons';
-
 import placeholder from '../assets/noImg.jpg'
 
 export default function Detail() {
-    // const { id } = useParams();
-    // const [recipe, setRecipe] = useState(null);
-    // const apiKey = '94223c8104e6456d88cf145ec6ecdf6b';
-    // const apiKey2 = 'cf116ecafaab4cda83a585339c3346de';
 
-    // useEffect(() => {
-    //     const fetchRecipe = async () => {
-    //         const response = await fetch(
-    //             `https://api.spoonacular.com/recipes/${id}/information?apiKey=${apiKey2}`
-    //         );
-
-    //         const data = await response.json();
-    //         setRecipe(data);
-    //         console.log(data)
-    //     };
-
-    //     fetchRecipe();
-    // }, [id])
-
-    // if (!recipe) return <p>Loading...</p>;
-
-    // fetch from saved storage
+    // Recipe data is passed from the previous page via React Router's state    
     const location = useLocation();
-    const recipe = location.state.recipe; // Access the passed recipe data
+    const { recipe } = location.state; // Access the passed recipe data
+
+    // stored recipes marked as favs
+    const [favorites, setFavorites] = useState(() => {
+        const saved = localStorage.getItem('favs');
+        return saved ? JSON.parse(saved) : [];
+    })
+
+    const handleFavClick = (id) => {
+        const updatedFavs = favorites.includes(id) ? favorites.filter((favId) => favId !== id) : [...favorites, id];
+        setFavorites(updatedFavs);
+        localStorage.setItem('favs', JSON.stringify(updatedFavs));
+    }
+
+    const isFavorite = (id) => favorites.includes(id);
+
+    useEffect(() => {
+        const saved = localStorage.getItem('favs')
+        if (saved) {
+            setFavorites(JSON.parse(saved))
+        }
+    }, [])
 
     console.log('Recipe Data:', recipe);
 
@@ -42,9 +42,23 @@ export default function Detail() {
                 <div className='max-w-container flex flex-col-reverse gap-4 md:flex-row'>
                     <div className='basis-2/3'>
                         <div className='flex flex-col gap-4'>
-                            <h1 className='p-4 border'>{recipe.title}</h1>
+                            <div className='flex justify-between gap-4'>
+                                <h1 className='p-4 w-full border'>{recipe.title}</h1>
 
-                            <div className='flex gap-4 w-full'>
+                                <button
+                                    onClick={(e) => {
+                                        e.stopPropagation();
+                                        handleFavClick(recipe.id);
+                                    }}
+                                    className='flex justify-center items-center p-4 border bg-green bg-opacity-35'>
+                                    <IonIcon name='heart'
+                                        className={`text-3xl transition duration-300
+                                    ${isFavorite(recipe.id) ? 'text-red' : 'text-white'}
+                                    `} />
+                                </button>
+                            </div>
+
+                            <div className='flex flex-col md:flex-row gap-4 w-full'>
                                 <div className='border px-4 py-2 flex gap-2 w-full'>
                                     <IonIcon name='alarm' className='text-2xl' />
                                     <p>{recipe.readyInMinutes} Mins</p>
@@ -71,7 +85,7 @@ export default function Detail() {
                     </div>
 
                     <div className='p-4 border basis-1/3'>
-                        <img src={recipe.image} alt="recipe img" className='h-full object-cover' />
+                        <img src={recipe.image || placeholder} alt="recipe img" className='h-full object-cover' />
                     </div>
                 </div>
 
