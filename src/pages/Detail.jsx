@@ -9,13 +9,15 @@ export default function Detail() {
     const location = useLocation();
     const { recipe } = location.state; // Access the passed recipe data
 
-    // stored recipes marked as favs
     const [favorites, setFavorites] = useState(() => {
+        // retrieved recipes that are favs from the local storage, parsed from a JSON string into a JavaScript array 
         const saved = localStorage.getItem('favs');
         return saved ? JSON.parse(saved) : [];
     })
 
+    //toggle the fav status
     const handleFavClick = (id) => {
+        //if id is alreaady in the array
         const updatedFavs = favorites.includes(id) ? favorites.filter((favId) => favId !== id) : [...favorites, id];
         setFavorites(updatedFavs);
         localStorage.setItem('favs', JSON.stringify(updatedFavs));
@@ -36,7 +38,6 @@ export default function Detail() {
 
 
     return (
-
         <>
             <section className='py-10 flex flex-col gap-4'>
                 <div className='max-w-container flex flex-col-reverse gap-4 md:flex-row'>
