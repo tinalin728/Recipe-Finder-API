@@ -1,5 +1,5 @@
 import React from 'react'
-import { Link } from 'react-router-dom'
+import { Link, NavLink } from 'react-router-dom'
 import logo from '../../public/assets/logo.svg'
 import IonIcon from '@reacticons/ionicons';
 
@@ -11,37 +11,37 @@ export default function Navbar() {
                 <nav className=''>
                     <ul className='flex gap-12 justify-center items-center max-w-container'>
                         <li className='list-none '>
-                            <Link to='/' className='flex flex-col justify-center items-center'>
+                            <NavLink to='/' className='flex flex-col justify-center items-center'>
                                 <IonIcon name="home-outline" className='text-[25px]' />
                                 <span className='text-[12px]'>
                                     Home
                                 </span>
-                            </Link>
+                            </NavLink>
                         </li>
                         <li className='list-none'>
-                            <Link to='/browse' className='flex flex-col justify-center items-center'>
+                            <NavLink to='/browse' className='flex flex-col justify-center items-center'>
                                 <IonIcon name="earth-outline" className='text-[25px]' />
                                 <span className='text-[12px]'>
                                     Browse
                                 </span>
-                            </Link>
+                            </NavLink>
                         </li>
 
                         <li className='list-none '>
-                            <Link to='/favorite' className='flex flex-col justify-center items-center'>
+                            <NavLink to='/favorite' className='flex flex-col justify-center items-center'>
                                 <IonIcon name="heart" className='text-[25px]' />
                                 <span className='text-[12px]'>
                                     Saves
                                 </span>
-                            </Link>
+                            </NavLink>
                         </li>
                         <li className='list-none'>
-                            <Link to='/' className='flex flex-col justify-center items-center'>
+                            <NavLink to='/' className='flex flex-col justify-center items-center'>
                                 <IonIcon name="list-outline" className='text-[25px]' />
                                 <span className='text-[12px]'>
                                     List
                                 </span>
-                            </Link>
+                            </NavLink>
                         </li>
                     </ul>
                 </nav>
@@ -56,40 +56,53 @@ export default function Navbar() {
                     </span>
                 </div>
 
-                <nav className='mt-2'>
-                    <ul className='flex flex-col items-start'>
-                        <li className='list-none w-full pr-20 py-4 hover:bg-gray-100'>
-                            <Link to='/' className='flex justify-center items-center gap-2'>
-                                <IonIcon name="home-outline" className='text-[30px]' />
-                                <span className='hidden md:block'>
-                                    Home
-                                </span>
-                            </Link>
+                <nav className='mt-6'>
+                    <ul className='flex flex-col items-start gap-2'>
+                        <li className='list-none w-full hover:bg-gray-100'>
+                            <NavLink
+                                to="/"
+                                className={({ isActive }) =>
+                                    `flex items-center gap-2 pl-5 py-4 ${isActive ? "bg-primary text-white" : ""
+                                    }`}
+                            >
+                                <IonIcon
+                                    name="home-outline"
+                                    className={`text-[30px]`}
+                                />
+                                <span className="hidden md:block">Home</span>
+                            </NavLink>
                         </li>
-                        <li className='list-none w-full pr-[4.5rem] py-4 hover:bg-gray-100'>
-                            <Link to='/browse' className='flex justify-center items-center gap-2'>
+                        <li className='list-none w-full hover:bg-gray-100'>
+                            <NavLink to='/browse' className={({ isActive }) =>
+                                `flex items-center gap-2 py-4 pl-5 ${isActive ? "bg-primary text-white" : ""
+                                }`}>
                                 <IonIcon name="earth-outline" className='text-[30px]' />
                                 <span className='hidden md:block'>
                                     Browse
                                 </span>
-                            </Link>
+                            </NavLink>
                         </li>
 
-                        <li className='list-none w-full pr-5 py-4 hover:bg-gray-100'>
-                            <Link to='/favorite' className='flex justify-center items-center gap-2'>
-                                <IonIcon name="heart" className='text-[30px]' />
+                        <li className='list-none w-full  hover:bg-gray-100'>
+                            <NavLink to='/favorite' className={({ isActive }) =>
+                                `flex items-center gap-2 py-4 pl-5 ${isActive ? "bg-primary text-white" : ""
+                                }`}
+                            >
+                                <IonIcon name="heart-outline" className='text-[30px]' />
                                 <span className='hidden md:block text-nowrap'>
                                     Saved Recipes
                                 </span>
-                            </Link>
+                            </NavLink>
                         </li>
-                        <li className='list-none w-full pr-6 py-4 hover:bg-gray-100'>
-                            <Link to='/' className='flex justify-center items-center gap-2'>
+                        <li className='list-none w-full hover:bg-gray-100'>
+                            <NavLink to='/' className={({ isActive }) =>
+                                `flex items-center gap-2 pr-1 py-4 pl-5 ${isActive ? "bg-primary text-white" : ""
+                                }`}>
                                 <IonIcon name="list-outline" className='text-[30px]' />
                                 <span className='hidden md:block'>
                                     Shopping List
                                 </span>
-                            </Link>
+                            </NavLink>
                         </li>
                     </ul>
                 </nav>

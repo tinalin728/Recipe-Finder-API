@@ -46,7 +46,7 @@ const RecipeCard = ({ recipe, placeholder, handleFavClick, isFavorite }) => {
                         e.stopPropagation();
                         handleFavClick(recipe.id);
                     }}
-                    className='absolute top-0 right-4 h-14 w-12 flex justify-center items-center bg-dark bg-opacity-60 shadow-md'>
+                    className='absolute top-0 right-4 h-14 w-12 flex justify-center items-center bg-dark bg-opacity-70 shadow-md'>
                     <IonIcon name='heart'
                         className={`text-3xl transition duration-300
                         ${isFavorite ? 'text-red' : 'text-white'}
