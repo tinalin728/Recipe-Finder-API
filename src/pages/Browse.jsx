@@ -1,11 +1,11 @@
 import React, { useEffect, useState, useCallback } from 'react';
 import { Link } from 'react-router-dom';
 import RecipeCard from '../components/RecipeCard';
-import banner from '../assets/banner.jpg';
+import banner from '../../public/assets/banner.jpg';
 import IonIcon from '@reacticons/ionicons';
-import placeholder from '../assets/noImg.jpg';
+import placeholder from '../../public/assets/noImg.jpg';
 
-export default function Home() {
+export default function Browse() {
     const [recipes, setRecipes] = useState([]);
 
     const [searchTerm, setSearchTerm] = useState("");
@@ -57,14 +57,6 @@ export default function Home() {
 
     return (
         <>
-            <section className="relative w-full h-[50vh]" style={bannerBg}>
-                <div className="absolute inset-0 bg-black bg-opacity-60 flex flex-col justify-center items-center">
-                    <div className="max-w-container text-center">
-                        <h1 className="text-white mb-4">Running out of ideas to cook?</h1>
-                        <h1 className="text-green">Unleash Your Culinary Creativity here</h1>
-                    </div>
-                </div>
-            </section>
             <section className="pt-10">
                 <div className="max-w-container mt-6">
                     <div className="w-full flex justify-center items-center">

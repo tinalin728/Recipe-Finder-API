@@ -1,4 +1,6 @@
 /** @type {import('tailwindcss').Config} */
+const defaultTheme = require("tailwindcss/defaultTheme");
+
 export default {
   content: [
     "./index.html",
@@ -6,24 +8,22 @@ export default {
   ],
   theme: {
     extend: {
+      fontFamily: {
+        lato: ["Lato", ...defaultTheme.fontFamily.sans],
+        montserrat: ["Montserrat", ...defaultTheme.fontFamily.sans],
+      },
       borderColor: {
         DEFAULT: 'black'
       },
       colors: {
-        'green': '#63FE5B',
+        'primary': '#4CAF50',
         'green-darker': '#276524',
         'beige-lighter': '#eeeeee',
+        'neutral': '#F9F9F9',
         'beige': '#F3F0E6',
         'dark': '#2c2a27',
         'red': '#FE5B63',
         'purple': '#F65BFE',
-
-
-        'default': '#e3edf7',
-        'icon-primary': '#657789',
-        'primary': '#8FAADC',
-        'primary-darker': '#3C64B1',
-        'dark-blue': '#3c4b66',
       },
 
       boxShadow: {

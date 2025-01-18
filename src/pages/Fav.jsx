@@ -1,6 +1,6 @@
 import { Navigate, useNavigate } from 'react-router-dom';
 import RecipeCard from '../components/RecipeCard';
-import placeholder from '../assets/noImg.jpg';
+import placeholder from '../../public/assets/noImg.jpg';
 import { useEffect, useState } from 'react';
 
 export default function Fav() {
@@ -52,8 +52,8 @@ export default function Fav() {
     if (error) return <p>{error}</p>;
 
     return (
-        <section>
-            <div className="max-w-container h-screen">
+        <section className='h-full pb-10'>
+            <div className="max-w-container">
                 <h1 className="uppercase text-dark my-10 pb-4 border-b border-dark">My Favorites</h1>
 
                 {favRecipes.length === 0 ? (
@@ -62,7 +62,7 @@ export default function Fav() {
                         <button onClick={() => navigate('/')}> Back to Home Page</button>
                     </div>
                 ) : (
-                    <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                    <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                         {favRecipes.map((recipe) => (
                             <RecipeCard
                                 key={recipe.id}
