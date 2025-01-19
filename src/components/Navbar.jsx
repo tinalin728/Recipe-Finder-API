@@ -5,13 +5,13 @@ import IonIcon from '@reacticons/ionicons';
 
 export default function Navbar() {
     return (
-        <header className='lg:fixed lg:h-full lg:bg-white lg:max-w-[200px] lg:w-full z-[999] shadow-md'>
+        <header className='lg:fixed lg:top-0 lg:h-full lg:bg-white lg:max-w-[200px] lg:w-full z-[999] shadow-md'>
             {/* mobile */}
             <div className='block lg:hidden fixed bottom-0 left-1/2 -translate-x-1/2 z-[999] w-full bg-white py-3'>
                 <nav className=''>
                     <ul className='flex gap-12 justify-center items-center max-w-container'>
                         <li className='list-none '>
-                            <NavLink to='/' className='flex flex-col justify-center items-center'>
+                            <NavLink to='/' className={({ isActive }) => `flex flex-col justify-center items-center ${isActive ? 'text-primary' : ''}`} >
                                 <IonIcon name="home-outline" className='text-[25px]' />
                                 <span className='text-[12px]'>
                                     Home
@@ -19,7 +19,7 @@ export default function Navbar() {
                             </NavLink>
                         </li>
                         <li className='list-none'>
-                            <NavLink to='/browse' className='flex flex-col justify-center items-center'>
+                            <NavLink to='/browse' className={({ isActive }) => `flex flex-col justify-center items-center ${isActive ? 'text-primary' : ''}`}>
                                 <IonIcon name="earth-outline" className='text-[25px]' />
                                 <span className='text-[12px]'>
                                     Browse
@@ -28,7 +28,7 @@ export default function Navbar() {
                         </li>
 
                         <li className='list-none '>
-                            <NavLink to='/favorite' className='flex flex-col justify-center items-center'>
+                            <NavLink to='/favorite' className={({ isActive }) => `flex flex-col justify-center items-center ${isActive ? 'text-primary' : ''}`}>
                                 <IonIcon name="heart" className='text-[25px]' />
                                 <span className='text-[12px]'>
                                     Saves
@@ -36,7 +36,7 @@ export default function Navbar() {
                             </NavLink>
                         </li>
                         <li className='list-none'>
-                            <NavLink to='/' className='flex flex-col justify-center items-center'>
+                            <NavLink to='/list' className={({ isActive }) => `flex flex-col justify-center items-center ${isActive ? 'text-primary' : ''}`}>
                                 <IonIcon name="list-outline" className='text-[25px]' />
                                 <span className='text-[12px]'>
                                     List
@@ -95,7 +95,7 @@ export default function Navbar() {
                             </NavLink>
                         </li>
                         <li className='list-none w-full hover:bg-gray-100'>
-                            <NavLink to='/' className={({ isActive }) =>
+                            <NavLink to='/list' className={({ isActive }) =>
                                 `flex items-center gap-2 pr-1 py-4 pl-5 ${isActive ? "bg-primary text-white" : ""
                                 }`}>
                                 <IonIcon name="list-outline" className='text-[30px]' />

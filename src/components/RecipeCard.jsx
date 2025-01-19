@@ -75,13 +75,14 @@ const RecipeCard = ({ recipe, placeholder, handleFavClick, isFavorite }) => {
             <div className='border-t border-black'>
                 <div className='flex justify-between items-stretch'>
                     <div className='flex items-center gap-2 py-4 px-6'>
-                        <IonIcon name='alarm' className='text-3xl text-green-darker' />
+                        <IonIcon name='alarm' className='text-[28px]' />
                         <p> {recipe.readyInMinutes} Mins</p>
                     </div>
                     <Link to={`/recipe/${recipe.id}`}
                         state={{ recipe }}
                         className='flex items-center border-l border-black px-6 py-4 bg-beige hover:bg-primary hover:text-white transition duration-300'>
                         View Now
+
                     </Link>
                 </div>
             </div>

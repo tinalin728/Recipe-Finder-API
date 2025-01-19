@@ -5,17 +5,14 @@ import banner from '../../public/assets/banner.jpg';
 import IonIcon from '@reacticons/ionicons';
 import placeholder from '../../public/assets/noImg.jpg';
 
-export default function Browse() {
+export default function Browse({ toggleFav, savedFavs }) {
     const [recipes, setRecipes] = useState([]);
 
     const [searchTerm, setSearchTerm] = useState("");
 
-    const [favs, setFavs] = useState(() => {
-        const storedFavs = localStorage.getItem('favs');
-        return storedFavs ? JSON.parse(storedFavs) : [];
-    });
 
-    const apiKey = '94223c8104e6456d88cf145ec6ecdf6b';
+    // const apiKey = '94223c8104e6456d88cf145ec6ecdf6b';
+    const apiKey = 'cf116ecafaab4cda83a585339c3346de';
 
     const searchRecipes = () => {
         fetch(`https://api.spoonacular.com/recipes/random?apiKey=${apiKey}&number=10`)
@@ -27,16 +24,6 @@ export default function Browse() {
                 setRecipes(filteredRecipes);
             })
             .catch((error) => console.error("Error fetching recipes:", error));
-    };
-
-    const toggleFav = (recipeID) => {
-        const updatedFavs = favs.includes(recipeID)
-            ? favs.filter((favId) => favId !== recipeID)
-            : [...favs, recipeID];
-
-        //console.log("Updated Favs:", updatedFavs); 
-        localStorage.setItem("favs", JSON.stringify(updatedFavs));
-        setFavs(updatedFavs);
     };
 
 
@@ -91,7 +78,7 @@ export default function Browse() {
                                 key={recipe.id}
                                 recipe={recipe}
                                 placeholder={placeholder}
-                                isFavorite={favs.includes(recipe.id)} // Check if recipe ID is in favs
+                                isFavorite={savedFavs.includes(recipe.id)} // Check if recipe ID is in favs
                                 handleFavClick={() => toggleFav(recipe.id)}
                             />
                         ))}

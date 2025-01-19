@@ -10,7 +10,7 @@
     }
 
     .max-w-container {
-        max-width: 85rem;
+        max-width: 110rem;
         margin: 0 auto;
         padding: 0 2rem;
         overflow-x: hidden;
@@ -29,15 +29,19 @@
     }
 
     h1 {
-        @apply text-2xl md:text-3xl font-montserrat font-medium
+        @apply text-3xl md:text-4xl lg:text-5xl font-montserrat font-medium
     }
 
     h2 {
-        @apply text-2xl
+        @apply text-xl md:text-2xl lg:text-3xl font-montserrat leading-normal
     }
 
     h3 {
         @apply text-xl font-montserrat uppercase text-white tracking-wider
+    }
+
+    h4 {
+        @apply text-[20px] text-white font-lato font-light
     }
 
     p {
@@ -47,4 +51,76 @@
     li {
         @apply list-disc font-montserrat
     }
+
+
+
+    input[type="checkbox"] {
+        appearance: none;
+        -webkit-appearance: none;
+        display: flex;
+        align-content: center;
+        justify-content: center;
+        width: 18px;
+        height: 18px;
+        border: 2px solid gray;
+        border-radius: 50%;
+        position: relative;
+    }
+
+    input[type="checkbox"]::before {
+        content: "";
+        width: 10px;
+        height: 10px;
+        background-color: green;
+        border-radius: 50%;
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        z-index: 100;
+        transform: translate(-50%, -50%) scale(0);
+        opacity: 0;
+        transition: transform 0.2s ease-in-out, opacity 0.2s ease-in-out;
+
+    }
+
+    input[type="checkbox"]:checked::before {
+        transform: translate(-50%, -50%) scale(1);
+        opacity: 1;
+    }
+
+    input[type="checkbox"]:hover {
+        color: black;
+    }
+
+
+    .custom-list li {
+        position: relative;
+        list-style-type: none;
+        padding-left: 2.5rem;
+    }
+
+    .custom-list li::marker {
+        font-size: 1rem;
+        font-weight: bold;
+    }
+
+    .custom-list li::before {
+        content: counter(list-item);
+        position: absolute;
+        left: 0;
+        top: 50%;
+        transform: translateY(-50%);
+        width: 1.75rem;
+        height: 1.75rem;
+        border-radius: 50%;
+        border-width: 1px;
+        background-color: white;
+        border-color: green;
+        color: green;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+
 }

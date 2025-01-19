@@ -5,7 +5,17 @@ import IonIcon from '@reacticons/ionicons';
 import placeholder from '../../public/assets/noImg.jpg'
 
 
-export default function Detail() {
+export default function Detail({ addIngredients }) {
+
+    const [isAdded, setIsAdded] = useState(false);
+
+    const handleAddToList = () => {
+        setIsAdded(true);
+
+        // Optional: Reset the button text after a delay (e.g., 2 seconds)
+        setTimeout(() => setIsAdded(false), 2000);
+    };
+
 
     // Recipe data is passed from the previous page via React Router's state    
     const location = useLocation();
@@ -54,20 +64,22 @@ export default function Detail() {
             <section className='py-10 flex flex-col gap-4 max-w-container'>
                 <div className='flex flex-col-reverse gap-4 lg:flex-row'>
                     <div className='basis-[60%]'>
-                        <div className='flex flex-col gap-4'>
-                            <div className='flex justify-between gap-4'>
-                                <h1 className='p-4 w-full border'>{recipe.title}</h1>
+                        <div className='flex flex-col gap-4 h-full'>
+                            <div className='p-4 w-full border'>
+                                <h1 className=''>{recipe.title}</h1>
                             </div>
 
-                            <div className='flex flex-col gap-4 w-full flex-wrap md:flex-row xl:flex-nowrap'>
-                                <div className='border px-4 py-2 flex gap-2 w-full'>
-                                    <IonIcon name='alarm' className='text-2xl' />
-                                    <p>{recipe.readyInMinutes} Mins</p>
-                                </div>
+                            <div className='flex gap-4 w-full flex-wrap flex-row xl:flex-nowrap flex-none'>
+                                <div className='flex gap-4 w-full'>
+                                    <div className='border px-4 py-2 flex gap-2 w-full text-nowrap'>
+                                        <IonIcon name='alarm' className='text-2xl' />
+                                        <p>{recipe.readyInMinutes} Mins</p>
+                                    </div>
 
-                                <div className='border px-4 py-2 text-nowrap flex gap-2 w-full'>
-                                    <IonIcon name='people-circle-outline' className='text-2xl' />
-                                    <p>Servings: {recipe.servings} </p>
+                                    <div className='border px-4 py-2 text-nowrap flex gap-2 w-full'>
+                                        <IonIcon name='happy-outline' className='text-2xl' />
+                                        <p>{recipe.servings} Servings</p>
+                                    </div>
                                 </div>
 
                                 <div className='border px-4 py-2 flex gap-2 w-full'>
@@ -85,11 +97,14 @@ export default function Detail() {
                                     </ul>
                                 </div>
                             </div>
-                            <div className='p-4 border h-full relative'>
+
+                            <div className='p-4 border h-full relative flex-grow'>
                                 <div className='absolute top-0 left-0 bg-primary w-full p-2 border-b'>
                                     <h3>About</h3>
                                 </div>
-                                <p className='mt-10' dangerouslySetInnerHTML={{ __html: recipe.summary }} />
+                                <div className='h-full mt-10'>
+                                    <p dangerouslySetInnerHTML={{ __html: recipe.summary }} />
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -111,35 +126,70 @@ export default function Detail() {
                 </div>
 
                 <div className='flex flex-col-reverse gap-4 w-full lg:flex-row'>
-                    <div className='border basis-[70%]'>
-                        <div className='relative  p-4'>
+                    <div className='border basis-[65%]'>
+                        <div className='relative p-4'>
                             <div className='absolute top-0 left-0 bg-primary w-full p-2 border-b'>
                                 <h3>Instructions</h3>
                             </div>
 
-                            <div
-                                className="mt-10 pl-4"
-                                dangerouslySetInnerHTML={{ __html: renderInstructions(recipe.instructions) }}
-                            />
+                            <ol className="mt-10 pl-4 list-decimal">
+                                {recipe.analyzedInstructions && recipe.analyzedInstructions.length > 0 ? (
+                                    recipe.analyzedInstructions[0].steps.map((step, index) => (
+                                        <li key={index} className='my-4 list-decimal'>
+                                            {step.step}
+                                        </li>
+                                    ))
+                                ) : (
+                                    <li>No instructions available.</li>
+                                )}
+                            </ol>
                         </div>
                     </div>
 
-                    <div className='border p-4 relative w-full basis-[30%]'>
-                        <div className='absolute top-0 left-0 bg-primary w-full p-2 border-b'>
+                    <div className="border py-4 relative w-full basis-[35%]">
+                        <div className="absolute top-0 left-0 bg-primary w-full p-2 border-b">
                             <h3>Ingredients</h3>
                         </div>
-                        <ul className='pl-4 mt-10'>
-                            {recipe.extendedIngredients.map((item) => (
-                                <li key={item.id} className='my-4'>
-                                    <span className='text-green-darker mr-2'>
-                                        {item.amount} {item.unit}
-                                    </span>
-                                    {item.name}
-                                </li>
-                            ))
-                            }
-                        </ul>
+                        <form
+                            onSubmit={(e) => {
+                                e.preventDefault();
+                                const selectedIngredients = Array.from(e.target.elements)
+                                    .filter((el) => el.checked)
+                                    .map((el) => el.value);
+
+                                addIngredients(selectedIngredients);
+                                handleAddToList();
+                            }}
+                        >
+                            <ul className="pl-4 mt-10">
+                                {recipe.extendedIngredients.map((item) => (
+                                    <li key={item.id} className="my-4 flex items-center">
+                                        <input
+                                            type="checkbox"
+                                            id={`ingredient-${item.id}`}
+                                            value={`${item.amount} ${item.unit} ${item.name}`}
+                                            className="mr-2 w-4 h-4 cursor-pointer"
+                                        />
+                                        <label
+                                            htmlFor={`ingredient-${item.id}`}
+                                            className="cursor-pointer"
+                                        >
+                                            <span className='text-yellow-800'>{item.amount} {item.unit} </span>  {item.name}
+                                        </label>
+                                    </li>
+                                ))}
+                            </ul>
+
+                            <button
+                                type="submit"
+                                className="mt-4 ml-4 px-4 py-2 bg-primary text-white rounded hover:bg-green-darker transition"
+                            >
+                                {isAdded ? 'Added to the list' : 'Add to list'}
+                            </button>
+                        </form>
+
                     </div>
+
                 </div>
             </section>
         </>

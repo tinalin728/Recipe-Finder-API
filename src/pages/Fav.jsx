@@ -3,42 +3,40 @@ import RecipeCard from '../components/RecipeCard';
 import placeholder from '../../public/assets/noImg.jpg';
 import { useEffect, useState } from 'react';
 
-export default function Fav() {
+export default function Fav({ savedFavs = [], toggleFav }) {
     const navigate = useNavigate();
 
-    const apiKey = '94223c8104e6456d88cf145ec6ecdf6b';
-
-    const [savedFavs, setSavedFavs] = useState(() => {
-        const saved = localStorage.getItem('favs');
-        return saved ? JSON.parse(saved) : [];
-    });
+    // const apiKey = '94223c8104e6456d88cf145ec6ecdf6b';
+    const apiKey = 'cf116ecafaab4cda83a585339c3346de';
 
     const [favRecipes, setFavRecipes] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
 
-    // Toggle favorite directly in this component
-    const toggleFav = (recipeID) => {
-        const updatedFavs = savedFavs.includes(recipeID)
-            ? savedFavs.filter((favId) => favId !== recipeID) // Remove favorite
-            : [...savedFavs, recipeID]; // Add favorite
-
-        localStorage.setItem('favs', JSON.stringify(updatedFavs)); // Update localStorage
-        setSavedFavs(updatedFavs); // Update state
-    };
-
     useEffect(() => {
-        if (savedFavs.length === 0) {
+        if (!savedFavs || savedFavs.length === 0) {
+            console.warn('No valid favorites in savedFavs');
             setFavRecipes([]);
             setLoading(false);
             return;
         }
 
+        const uniqueFavs = [...new Set(savedFavs)];  // Remove duplicates
         setLoading(true);
-        fetch(`https://api.spoonacular.com/recipes/informationBulk?apiKey=${apiKey}&ids=${savedFavs.join(',')}`)
-            .then((response) => response.json())
+
+        const url = `https://api.spoonacular.com/recipes/informationBulk?apiKey=${apiKey}&ids=${uniqueFavs.join(',')}`;
+        console.log('Fetching URL:', url);
+
+        fetch(url)
+            .then((response) => {
+                if (!response.ok) {
+                    throw new Error(`HTTP error! Status: ${response.status}`);
+                }
+                return response.json();
+            })
             .then((data) => {
-                setFavRecipes(data); // The data is an array of favorite recipes
+                console.log('Fetched Data:', data);
+                setFavRecipes(data);
                 setLoading(false);
             })
             .catch((err) => {
@@ -46,7 +44,10 @@ export default function Fav() {
                 setError('Failed to load favorite recipes. Please try again later.');
                 setLoading(false);
             });
-    }, [savedFavs, apiKey]);
+    }, [savedFavs]);
+
+
+
 
     if (loading) return <p>Loading...</p>;
     if (error) return <p>{error}</p>;
@@ -54,7 +55,7 @@ export default function Fav() {
     return (
         <section className='h-full pb-10'>
             <div className="max-w-container">
-                <h1 className="uppercase text-dark my-10 pb-4 border-b border-dark text-center md:text-left">My Saved Recipes</h1>
+                <h2 className="uppercase text-dark my-10 pb-4 border-b border-dark text-center md:text-left">My Saved Recipes</h2>
 
                 {favRecipes.length === 0 ? (
                     <div className="text-center h-screen">
