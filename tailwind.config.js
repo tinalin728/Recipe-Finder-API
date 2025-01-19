@@ -2,6 +2,7 @@
 const defaultTheme = require("tailwindcss/defaultTheme");
 
 export default {
+  darkMode: ['selector', '[data-mode="dark"]'],
   content: [
     "./index.html",
     "./src/**/*.{js,ts,jsx,tsx}",
@@ -16,14 +17,17 @@ export default {
         DEFAULT: 'black'
       },
       colors: {
-        'primary': '#4CAF50',
-        'green-darker': '#276524',
-        'beige-lighter': '#eeeeee',
-        'neutral': '#F9F9F9',
-        'beige': '#F3F0E6',
-        'dark': '#2c2a27',
+        'accent': '#dcf763',
+        'accent-darker': '#C5E053',
+        'light-bg': '#f1f2ee',
+        'primary-light': '#f9f9f9',
+        'sec-light': '#bfb7b6',
+
         'red': '#FE5B63',
-        'purple': '#F65BFE',
+
+        'dark-bg': '#2B2B2B',
+        'primary-dark': '#2e2e2e',
+        'sec-dark': '#4a4a4a'
       },
 
       boxShadow: {

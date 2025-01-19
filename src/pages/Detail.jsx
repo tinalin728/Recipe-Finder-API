@@ -65,25 +65,25 @@ export default function Detail({ addIngredients }) {
                 <div className='flex flex-col-reverse gap-4 lg:flex-row'>
                     <div className='basis-[60%]'>
                         <div className='flex flex-col gap-4 h-full'>
-                            <div className='p-4 w-full border'>
+                            <div className='p-4 w-full border bg-primary-light dark:bg-sec-dark dark:border-white'>
                                 <h1 className=''>{recipe.title}</h1>
                             </div>
 
                             <div className='flex gap-4 w-full flex-wrap flex-row xl:flex-nowrap flex-none'>
-                                <div className='flex gap-4 w-full'>
-                                    <div className='border px-4 py-2 flex gap-2 w-full text-nowrap'>
-                                        <IonIcon name='alarm' className='text-2xl' />
+                                <div className='flex gap-4 w-full '>
+                                    <div className='border px-4 py-2 flex gap-2 w-full text-nowrap bg-primary-light dark:bg-sec-dark dark:border-white'>
+                                        <IonIcon name='alarm' className='text-2xl text-sec-light' />
                                         <p>{recipe.readyInMinutes} Mins</p>
                                     </div>
 
-                                    <div className='border px-4 py-2 text-nowrap flex gap-2 w-full'>
-                                        <IonIcon name='happy-outline' className='text-2xl' />
+                                    <div className='border px-4 py-2 text-nowrap flex gap-2 w-full bg-primary-light dark:bg-sec-dark dark:border-white'>
+                                        <IonIcon name='happy-outline' className='text-2xl text-sec-light' />
                                         <p>{recipe.servings} Servings</p>
                                     </div>
                                 </div>
 
-                                <div className='border px-4 py-2 flex gap-2 w-full'>
-                                    <IonIcon name='information-circle' className='text-2xl' />
+                                <div className='border px-4 py-2 flex gap-2 w-full bg-primary-light dark:bg-sec-dark dark:border-white'>
+                                    <IonIcon name='information-circle' className='text-2xl text-sec-light' />
                                     <ul className='flex gap-2'>
                                         {recipe.diets && recipe.diets.length > 0 ? (recipe.diets.map((diet, index) => (
                                             <li key={index} className='list-none lg:text-nowrap'>
@@ -98,8 +98,8 @@ export default function Detail({ addIngredients }) {
                                 </div>
                             </div>
 
-                            <div className='p-4 border h-full relative flex-grow'>
-                                <div className='absolute top-0 left-0 bg-primary w-full p-2 border-b'>
+                            <div className='p-4 border h-full relative flex-grow bg-primary-light dark:bg-sec-dark dark:border-white'>
+                                <div className='absolute top-0 left-0 bg-sec-light text-white w-full p-2 border-b dark:border-b-primary-light'>
                                     <h3>About</h3>
                                 </div>
                                 <div className='h-full mt-10'>
@@ -109,7 +109,7 @@ export default function Detail({ addIngredients }) {
                         </div>
                     </div>
 
-                    <div className='p-4 border basis-[40%] relative'>
+                    <div className='p-4 border basis-[40%] relative bg-primary-light dark:bg-sec-dark dark:border-primary-light'>
                         <button
                             onClick={(e) => {
                                 e.stopPropagation();
@@ -126,9 +126,9 @@ export default function Detail({ addIngredients }) {
                 </div>
 
                 <div className='flex flex-col-reverse gap-4 w-full lg:flex-row'>
-                    <div className='border basis-[65%]'>
+                    <div className='border basis-[65%] bg-primary-light dark:bg-sec-dark dark:border-white'>
                         <div className='relative p-4'>
-                            <div className='absolute top-0 left-0 bg-primary w-full p-2 border-b'>
+                            <div className='absolute top-0 left-0 bg-sec-light text-white w-full p-2 border-b dark:border-b-primary-light'>
                                 <h3>Instructions</h3>
                             </div>
 
@@ -146,8 +146,8 @@ export default function Detail({ addIngredients }) {
                         </div>
                     </div>
 
-                    <div className="border py-4 relative w-full basis-[35%]">
-                        <div className="absolute top-0 left-0 bg-primary w-full p-2 border-b">
+                    <div className="border py-4 relative w-full basis-[35%] dark:bg-sec-dark dark:border-white">
+                        <div className="absolute top-0 left-0 bg-sec-light text-white w-full p-2 border-b dark:border-b-primary-light">
                             <h3>Ingredients</h3>
                         </div>
                         <form
@@ -174,7 +174,7 @@ export default function Detail({ addIngredients }) {
                                             htmlFor={`ingredient-${item.id}`}
                                             className="cursor-pointer"
                                         >
-                                            <span className='text-yellow-800'>{item.amount} {item.unit} </span>  {item.name}
+                                            <span className='text-yellow-800 dark:text-yellow-100'>{item.amount} {item.unit} </span>  {item.name}
                                         </label>
                                     </li>
                                 ))}
@@ -182,7 +182,7 @@ export default function Detail({ addIngredients }) {
 
                             <button
                                 type="submit"
-                                className="mt-4 ml-4 px-4 py-2 bg-primary text-white rounded hover:bg-green-darker transition"
+                                className="mt-4 ml-4 px-4 py-2 bg-accent text-black rounded-lg border hover:bg-accent-darker transition"
                             >
                                 {isAdded ? 'Added to the list' : 'Add to list'}
                             </button>

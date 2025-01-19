@@ -5,8 +5,13 @@
 
 @layer base {
 
+    /* Light Mode */
     body {
-        @apply bg-neutral overflow-x-hidden font-lato
+        @apply bg-light-bg text-black dark:bg-dark-bg dark:text-primary-light transition-colors duration-300;
+    }
+
+    header {
+        @apply bg-white dark:bg-primary-dark dark:text-primary-light
     }
 
     .max-w-container {
@@ -33,11 +38,11 @@
     }
 
     h2 {
-        @apply text-xl md:text-2xl lg:text-3xl font-montserrat leading-normal
+        @apply text-2xl md:text-3xl lg:text-4xl font-montserrat leading-normal
     }
 
     h3 {
-        @apply text-xl font-montserrat uppercase text-white tracking-wider
+        @apply text-xl font-montserrat uppercase tracking-wider
     }
 
     h4 {
@@ -45,7 +50,7 @@
     }
 
     p {
-        @apply text-dark leading-normal
+        @apply leading-normal
     }
 
     li {
@@ -62,16 +67,18 @@
         justify-content: center;
         width: 18px;
         height: 18px;
-        border: 2px solid gray;
+        border: 1.5px solid black;
         border-radius: 50%;
         position: relative;
+
+        @apply border-primary-light
     }
 
     input[type="checkbox"]::before {
         content: "";
         width: 10px;
         height: 10px;
-        background-color: green;
+        background-color: gray;
         border-radius: 50%;
         position: absolute;
         top: 50%;
@@ -81,6 +88,7 @@
         opacity: 0;
         transition: transform 0.2s ease-in-out, opacity 0.2s ease-in-out;
 
+        @apply dark:bg-primary-light
     }
 
     input[type="checkbox"]:checked::before {
@@ -96,7 +104,7 @@
     .custom-list li {
         position: relative;
         list-style-type: none;
-        padding-left: 2.5rem;
+        padding-left: 2.8rem;
     }
 
     .custom-list li::marker {
@@ -110,17 +118,18 @@
         left: 0;
         top: 50%;
         transform: translateY(-50%);
-        width: 1.75rem;
-        height: 1.75rem;
+        font-size: 18px;
+        width: 2rem;
+        height: 2rem;
         border-radius: 50%;
         border-width: 1px;
-        background-color: white;
-        border-color: green;
-        color: green;
+        background-color: #bfb7b6;
+        border-color: white;
+        color: white;
         display: flex;
         align-items: center;
         justify-content: center;
-    }
 
+    }
 
 }

@@ -55,7 +55,7 @@ export default function Fav({ savedFavs = [], toggleFav }) {
     return (
         <section className='h-full pb-10'>
             <div className="max-w-container">
-                <h2 className="uppercase text-dark my-10 pb-4 border-b border-dark text-center md:text-left">My Saved Recipes</h2>
+                <h2 className="uppercase my-10 pb-4 border-b dark:border-b-primary-light text-center md:text-left">My Saved Recipes</h2>
 
                 {favRecipes.length === 0 ? (
                     <div className="text-center h-screen">

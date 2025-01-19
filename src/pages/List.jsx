@@ -37,31 +37,31 @@ export default function List({ groceryList, removeIngredient }) {
     return (
         <section className="relative">
             <div className='max-w-container py-10 relative z-10 h-full'>
-                <h2 className="uppercase border-b my-10 pb-4 text-center md:text-left ">
+                <h2 className="uppercase border-b my-10 pb-4 text-center md:text-left dark:border-b-primary-light">
                     My Shopping List
                 </h2>
 
                 <div className='h-full'>
-                    <form onSubmit={handleAddItem} className="flex items-center gap-4 mb-6">
+                    <form onSubmit={handleAddItem} className="flex items-center mb-6">
                         <input
                             type="text"
                             value={newItem}
                             onChange={(e) => setNewItem(e.target.value)}
-                            placeholder="Enter an item..."
-                            className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary"
+                            placeholder="What do you need to buy?"
+                            className="w-full p-4 border focus:outline-none focus:ring-2 focus:ring-primary placeholder:tracking-wider placeholder:font-light placeholder:italic dark:bg-sec-dark dark:bg-opacity-80 dark:border-white"
                         />
                         <button
                             type="submit"
-                            className="px-4 py-2 bg-primary text-white rounded-lg border hover:bg-green-darker transition"
+                            className="p-4 text-nowrap bg-accent border text-black hover:bg-accent-darker dark:border-white transition duration-300"
                         >
-                            Add
+                            Add +
                         </button>
                     </form>
 
                     {groceryList.length > 0 ? (
-                        <ul className="custom-list list-none min-h-[80vh] bg-white p-4 border rounded-lg">
+                        <ul className="custom-list list-none min-h-[80vh] bg-primary-light dark:bg-sec-dark p-4 border rounded-lg dark:border-primary-light">
                             {groceryList.map((item, index) => (
-                                <li key={index} className="py-4 border-b border-dashed">
+                                <li key={index} className="py-4 border-b border-dashed dark:border-b-white">
                                     <div className='flex items-center justify-between '>
                                         <span>{item}</span>
                                         <button

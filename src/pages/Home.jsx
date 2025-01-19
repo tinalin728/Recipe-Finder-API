@@ -1,13 +1,13 @@
 import React, { useEffect, useState } from 'react'
 import banner from '../../public/assets/banner.jpg'
 import fav from '../../public/assets/fav.jpg'
+import list from '../../public/assets/list.jpg'
 import { NavLink, Link } from 'react-router-dom'
 import IonIcon from '@reacticons/ionicons';
 import RecipeCard from '../components/RecipeCard';
 import placeholder from '../../public/assets/noImg.jpg'
 
 export default function Home({ savedFavs, toggleFav }) {
-
 
     const [dayRecipes, setDayRecipes] = useState(null);
     // const apiKey = '94223c8104e6456d88cf145ec6ecdf6b';
@@ -45,28 +45,25 @@ export default function Home({ savedFavs, toggleFav }) {
     }, []);
 
 
-    const getHighResImage = (url) => {
-        return url.replace('-556x370', '-636x393'); // Or a larger resolution
-    };
 
     return (
         <>
             <section className='max-w-container overflow-hidden h-full mt-10'>
-                <div className='relative h-[60vh] bg-white overflow-hidden px-2 md:px-6 lg:px-10'>
+                <div className='relative h-[60vh] bg-white overflow-hidden px-2 md:px-6 lg:px-10 dark:border dark:border-primary-light dark:border-opacity-20'>
                     <div className='relative z-20 flex flex-col justify-center h-full text-white'>
                         <h1 className='text-center md:text-left'>Welcome to Nomly!</h1>
-                        <h2 className='pt-6 px-4 text-white font-light leading-snug max-w-[40rem] text-center mx-auto md:text-left md:mx-0 md:px-0'>  Where you can discover delicious recipes, save your favorites, and create grocery lists with ease.
+                        <h2 className='pt-6 px-4 text-white font-light leading-snug max-w-[60rem] text-center mx-auto md:text-left md:mx-0 md:px-0'>  Where you can discover delicious recipes, save your favorites, and create grocery lists with ease.
                         </h2>
                         <div className="mt-10 mx-auto md:mx-0">
                             <NavLink
                                 to="/browse"
-                                className="relative text-white font-montserrat text-xl px-4 py-3 bg-primary rounded-lg hover:bg-green-darker transition duration-500 shadow-md inline-flex justify-center items-center group"
+                                className="relative font-montserrat text-xl px-4 py-3 text-black bg-accent hover:bg-accent-darker rounded-lg transition duration-500 shadow-md inline-flex justify-center items-center group"
                             >
                                 <span className="tracking-wide ">
                                     Browse Recipes
                                 </span>
                                 <span
-                                    className="inline-block ml-2 text-white text-2xl transform transition-transform duration-500 group-hover:translate-x-1"
+                                    className="inline-block ml-2 text-2xl transform transition-transform duration-500 group-hover:translate-x-1"
                                 >
                                     →
                                 </span>
@@ -82,31 +79,31 @@ export default function Home({ savedFavs, toggleFav }) {
 
 
             <section className='flex flex-col gap-10 max-w-container my-10 md:flex-row'>
-                <Link to='/favorite' className="flex-1 h-full bg-white relative overflow-hidden group">
+                <Link to='/favorite' className="flex-1 h-full bg-white relative overflow-hidden group dark:border dark:border-primary-light dark:border-opacity-20">
                     <div className="absolute inset-0 flex flex-col justify-center items-center bg-black bg-opacity-40 group-hover:backdrop-blur-sm transition-all duration-500">
-                        <h1
+                        <h2
                             className="text-white transform transition-transform duration-500 group-hover:translate-y-[-10px]">
                             Saved Recipes
-                        </h1>
+                        </h2>
                         <h4
                             className="text-gray-200 lg:opacity-0 lg:transition-opacity lg:duration-500 lg:group-hover:opacity-100 lg:group-hover:translate-y-[0px] tracking-wide">
                             You have <span className='text-2xl px-2 font-medium text-white'> {savedFavs.length}</span> saved recipes
                         </h4>
                     </div>
-                    <img src={fav} alt="" />
+                    <img src={fav} alt="favorite recipe" />
                 </Link>
-                <Link to='/list' className="flex-1 h-full bg-white relative overflow-hidden group">
+                <Link to='/list' className="flex-1 h-full bg-white relative overflow-hidden group dark:border dark:border-primary-light dark:border-opacity-10">
                     <div className="absolute inset-0 flex flex-col justify-center items-center bg-black bg-opacity-40  group-hover:backdrop-blur-sm transition-all duration-500">
-                        <h1
+                        <h2
                             className="text-white transform transition-transform duration-500 group-hover:translate-y-[-10px]">
                             Shopping List
-                        </h1>
+                        </h2>
                         <h4
                             className="text-white lg:opacity-0 lg:transition-opacity lg:duration-500 lg:group-hover:opacity-100 lg:group-hover:translate-y-[0px] tracking-wide">
                             Add to your shopping list now
                         </h4>
                     </div>
-                    <img src={fav} alt="" />
+                    <img src={list} alt="" />
                 </Link>
             </section>
 
@@ -115,13 +112,12 @@ export default function Home({ savedFavs, toggleFav }) {
                 <div className='relative overflow-hidden'>
                     <div className="z-10 flex items-center gap-2 mb-4">
                         <IonIcon name="star" className="text-[28px] text-yellow-400" />
-                        <h2 className="text-black">Recipes of the Day</h2>
+                        <h2 className="text-black dark:text-white">Recipes of the Day</h2>
                     </div>
 
                     <div className='grid md:grid-cols-2 lg:grid-cols-3 gap-6'>
                         {dayRecipes && dayRecipes.length > 0 ? (
                             dayRecipes.map((recipe) => {
-                                // const isFavorite = savedFavs.includes(recipe.id)
                                 return (
                                     <RecipeCard
                                         key={recipe.id}
