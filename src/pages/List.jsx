@@ -67,7 +67,7 @@ export default function List({ groceryList, removeIngredient }) {
                                         <label className='flex items-center gap-2'>
                                             <input
                                                 type="checkbox"
-                                                className="w-5 h-5 cursor-pointer accent-primary dark:accent-accent custom-checkbox text-green"
+                                                className="w-5 h-5 cursor-pointer accent-primary dark:accent-accent custom-checkbox "
                                             />
                                             <span>{item}</span>
                                         </label>

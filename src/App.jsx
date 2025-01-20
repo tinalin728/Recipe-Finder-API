@@ -21,7 +21,7 @@ function App() {
       : [...savedFavs, recipeID];
 
     //console.log("Updated Favs:", updatedFavs); 
-    localStorage.setItem('favs', JSON.stringify(updatedFavs.map(id => id)));
+    localStorage.setItem('favs', JSON.stringify(updatedFavs));
     setSavedFavs(updatedFavs);
   };
 

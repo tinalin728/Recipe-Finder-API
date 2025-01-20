@@ -96,13 +96,13 @@ export default function Navbar() {
                     </span>
                 </div>
 
-                <nav className='mt-6 h-full'>
+                <nav className='mt-6 h-full px-2'>
                     <ul className='flex flex-col items-start gap-2'>
-                        <li className='list-none w-full hover:bg-gray-100 dark:hover:bg-gray-700'>
+                        <li className='list-none w-full hover:bg-gray-100 dark:hover:bg-gray-700 rounded-md'>
                             <NavLink
                                 to="/"
                                 className={({ isActive }) =>
-                                    `flex items-center gap-2 pl-5 py-4 ${isActive ? "bg-accent text-black" : ""
+                                    `flex items-center gap-2 pl-4 py-4 ${isActive ? "bg-dark-bg text-white rounded-md dark:text-black dark:bg-primary-light" : ""
                                     }`}
                             >
                                 {({ isActive }) => (
@@ -114,9 +114,9 @@ export default function Navbar() {
 
                             </NavLink>
                         </li>
-                        <li className='list-none w-full hover:bg-gray-100 dark:hover:bg-gray-700'>
+                        <li className='list-none w-full hover:bg-gray-100 dark:hover:bg-gray-700 rounded-md'>
                             <NavLink to='/browse' className={({ isActive }) =>
-                                `flex items-center gap-2 py-4 pl-5 ${isActive ? "bg-accent text-black" : ""
+                                `flex items-center gap-2 py-4 pl-4 ${isActive ? "bg-dark-bg text-white rounded-md dark:text-black dark:bg-primary-light" : ""
                                 }`}>
                                 {({ isActive }) => (
                                     <>
@@ -129,9 +129,9 @@ export default function Navbar() {
                             </NavLink>
                         </li>
 
-                        <li className='list-none w-full  hover:bg-gray-100 dark:hover:bg-gray-700'>
+                        <li className='list-none w-full  hover:bg-gray-100 dark:hover:bg-gray-700 rounded-md'>
                             <NavLink to='/favorite' className={({ isActive }) =>
-                                `flex items-center gap-2 py-4 pl-5 ${isActive ? "bg-accent text-black" : ""
+                                `flex items-center gap-2 py-4 pl-4 ${isActive ? "bg-dark-bg text-white rounded-md dark:text-black dark:bg-primary-light" : ""
                                 }`}
                             >
                                 {({ isActive }) => (
@@ -144,9 +144,9 @@ export default function Navbar() {
                                 )}
                             </NavLink>
                         </li>
-                        <li className='list-none w-full hover:bg-gray-100 dark:hover:bg-gray-700'>
+                        <li className='list-none w-full hover:bg-gray-100 dark:hover:bg-gray-700 rounded-md'>
                             <NavLink to='/list' className={({ isActive }) =>
-                                `flex items-center gap-2 pr-1 py-4 pl-5 ${isActive ? "bg-accent text-black" : ""
+                                `flex items-center gap-2 py-4 pl-4 ${isActive ? "bg-dark-bg text-white rounded-md dark:text-black dark:bg-primary-light" : ""
                                 }`}>
                                 {({ isActive }) => (
                                     <>
@@ -161,7 +161,7 @@ export default function Navbar() {
                     </ul>
                 </nav>
                 <div className='border-t border-black border-opacity-20 dark:border-primary-light dark:border-opacity-20'>
-                    <button className='flex items-center gap-2 py-4 pl-5'
+                    <button className='flex items-center gap-2 py-4 pl-4'
                         onClick={() => setDarkMode(!darkMode)}
                     >
                         <IonIcon name={darkMode ? "moon-outline" : "sunny-outline"} className={`text-[30px] ${darkMode ? 'text-accent' : 'text-yellow-500'}`} />

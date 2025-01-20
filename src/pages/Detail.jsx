@@ -19,7 +19,7 @@ export default function Detail({ addIngredients }) {
 
     // Recipe data is passed from the previous page via React Router's state    
     const location = useLocation();
-    const { recipe } = location.state; // Access the passed recipe data
+    const recipe = location.state?.recipe;
 
     const [favorites, setFavorites] = useState(() => {
         // retrieved recipes that are favs from the local storage, parsed from a JSON string into a JavaScript array 
@@ -113,6 +113,7 @@ export default function Detail({ addIngredients }) {
                         <button
                             onClick={(e) => {
                                 e.stopPropagation();
+                                e.preventDefault();
                                 handleFavClick(recipe.id);
                             }}
                             className='absolute right-6 top-0 flex justify-center items-center px-4 py-6 bg-black bg-opacity-40'>

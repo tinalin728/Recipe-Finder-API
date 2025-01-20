@@ -7,17 +7,17 @@ import placeholder from '../../public/assets/noImg.jpg';
 
 export default function Browse({ toggleFav, savedFavs }) {
     const [recipes, setRecipes] = useState([]);
-
+    const cuisines = ['Italian', "French", "Chinese", "Korean"];
+    const [selectedCuisine, setSelectedCuisine] = useState(null);
     const [searchTerm, setSearchTerm] = useState("");
 
-
-    // const apiKey = '94223c8104e6456d88cf145ec6ecdf6b';
-    const apiKey = 'cf116ecafaab4cda83a585339c3346de';
+    const apiKey = '94223c8104e6456d88cf145ec6ecdf6b';
+    // const apiKey = 'cf116ecafaab4cda83a585339c3346de';
 
     //function to search for recipes based on the entered search term
     const searchRecipes = () => {
         //fetch random recipes from API
-        fetch(`https://api.spoonacular.com/recipes/random?apiKey=${apiKey}&number=10`)
+        fetch(`https://api.spoonacular.com/recipes/random?apiKey=${apiKey}&number=12`)
             .then(response => response.json())
             .then(data => {
                 //filter recipes based on the search term entered by the user
@@ -31,26 +31,36 @@ export default function Browse({ toggleFav, savedFavs }) {
 
     //fetch 12 random recipes
     useEffect(() => {
-        fetch(`https://api.spoonacular.com/recipes/random?apiKey=${apiKey}&number=12`)
+        if (!selectedCuisine) {
+            fetch(`https://api.spoonacular.com/recipes/random?apiKey=${apiKey}&number=12`)
+                .then(response => response.json())
+                .then(data => setRecipes(data.recipes))
+                .catch((error) => console.error("Error fetching recipes:", error));
+        }
+    }, [selectedCuisine]);
+
+    //fetch based on cuisines
+    const handleFilter = (cuisine) => {
+        setSelectedCuisine(cuisine);
+
+        fetch(`https://api.spoonacular.com/recipes/complexSearch?apiKey=${apiKey}&cuisine=${cuisine}&number=12`)
             .then(response => response.json())
-            .then(data => setRecipes(data.recipes))
+            .then(data => {
+                if (data.results) {
+                    setRecipes(data.results);
+                } else {
+                    console.error("No recipes found for this cuisine.");
+                }
+            })
             .catch((error) => console.error("Error fetching recipes:", error));
-    }, []);
-
-
-    const bannerBg = {
-        backgroundImage: `url(${banner})`,
-        backgroundSize: 'cover',
-        backgroundPosition: 'center',
-        backgroundRepeat: 'no-repeat',
-    };
+    }
 
     return (
         <>
             <section className='max-w-container pt-10 pb-[6rem] lg:py-10'>
                 <h2 className="uppercase pb-4 border-b dark:border-b-primary-light text-center md:text-left">Browse Recipes</h2>
 
-                <div className=" mt-6">
+                <div className="mt-10 mb-6">
                     <div className="w-full flex items-center">
                         <input
                             type="text"
@@ -66,26 +76,48 @@ export default function Browse({ toggleFav, savedFavs }) {
                             <IonIcon name="search" className="text-3xl" />
                         </button>
                     </div>
-                    <p>Popular Search Terms: Pasta, Chicken Teriyaki</p>
+                    <p className='mt-2'>Popular Search Terms: Pasta, Chicken Teriyaki</p>
                 </div>
-            </section>
+                <div className='flex justify-between w-full mb-6'>
+                    <div className='flex gap-4'>
+                        {
+                            cuisines.map((cuisine, index) => (
+                                <div key={index} className={`px-6 py-2 border w-fit rounded-full bg-transparent hover:bg-primary-light cursor-pointer ${selectedCuisine === cuisine ? 'bg-dark-bg text-white dark:bg-primary-light dark:text-black' : ''}`}
+                                    onClick={() => handleFilter(cuisine)}
+                                >
+                                    <p className='tracking-wide text-lg'> {cuisine} </p>
+                                </div>
+                            ))
+                        }
 
-            <section className="py-10">
-                <div className="max-w-container">
-
-                    <div className="grid gap-6 grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
-                        {recipes.map((recipe) => (
-                            <RecipeCard
-                                key={recipe.id}
-                                recipe={recipe}
-                                placeholder={placeholder}
-                                isFavorite={savedFavs.includes(recipe.id)} // Check if recipe ID is in favs
-                                handleFavClick={() => toggleFav(recipe.id)}
-                            />
-                        ))}
                     </div>
+                    <button
+                        className='tracking-wide text-lg px-6 py-2 border w-fit rounded-full bg-transparent hover:bg-primary-light cursor-pointer'
+                        onClick={() => {
+                            setSelectedCuisine(null);
+                            fetch(`https://api.spoonacular.com/recipes/random?apiKey=${apiKey}&number=12`)
+                                .then(response => response.json())
+                                .then(data => setRecipes(data.recipes))
+                                .catch((error) => console.error("Error fetching recipes:", error));
+                        }}
+                    >
+                        Reset Filter
+                    </button>
+                </div>
+
+                <div className="grid gap-6 grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
+                    {recipes.map((recipe) => (
+                        <RecipeCard
+                            key={recipe.id}
+                            recipe={recipe}
+                            placeholder={placeholder}
+                            isFavorite={savedFavs.includes(recipe.id)}
+                            handleFavClick={() => toggleFav(recipe.id)}
+                        />
+                    ))}
                 </div>
             </section>
+
         </>
     );
 }

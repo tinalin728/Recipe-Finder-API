@@ -38,6 +38,7 @@ const RecipeCard = ({ recipe, placeholder, handleFavClick, isFavorite }) => {
     return (
         <Link
             to={`/recipe/${recipe.id}`}
+            onClick={(e) => e.stopPropagation()}
             state={{ recipe }}
             className='flex flex-col bg-primary-light dark:bg-sec-dark overflow-hidden relative shadow-sm border dark:border-primary-light'>
             <div className='relative border-b dark:border-b-primary-light'>
@@ -47,6 +48,7 @@ const RecipeCard = ({ recipe, placeholder, handleFavClick, isFavorite }) => {
                 <button
                     onClick={(e) => {
                         e.stopPropagation();
+                        e.preventDefault();
                         handleFavClick(recipe.id);
                     }}
                     className='absolute top-0 right-4 h-14 w-12 flex justify-center items-center bg-black bg-opacity-50 backdrop-blur-md shadow-md dark:border-x dark:border-b dark:border-primary-light dark:border-opacity-50'>

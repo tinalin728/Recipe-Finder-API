@@ -6,8 +6,8 @@ import { useEffect, useState } from 'react';
 export default function Fav({ savedFavs = [], toggleFav }) {
     const navigate = useNavigate();
 
-    // const apiKey = '94223c8104e6456d88cf145ec6ecdf6b';
-    const apiKey = 'cf116ecafaab4cda83a585339c3346de';
+    const apiKey = '94223c8104e6456d88cf145ec6ecdf6b';
+    // const apiKey = 'cf116ecafaab4cda83a585339c3346de';
 
     const [favRecipes, setFavRecipes] = useState([]);
     const [loading, setLoading] = useState(true);
@@ -56,7 +56,7 @@ export default function Fav({ savedFavs = [], toggleFav }) {
 
 
     return (
-        <section className='h-full pb-10'>
+        <section className='h-full pb-[8rem] lg:pb-10'>
             <div className="max-w-container">
                 <h2 className="uppercase my-10 pb-4 border-b dark:border-b-primary-light text-center md:text-left">My Saved Recipes</h2>
 
