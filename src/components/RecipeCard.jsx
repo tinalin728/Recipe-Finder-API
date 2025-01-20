@@ -36,11 +36,14 @@ const RecipeCard = ({ recipe, placeholder, handleFavClick, isFavorite }) => {
     console.log("Final Image URL for rendering:", highResImage);
 
     return (
-        <div className='flex flex-col bg-primary-light dark:bg-sec-dark overflow-hidden relative shadow-sm border dark:border-primary-light'>
+        <Link
+            to={`/recipe/${recipe.id}`}
+            state={{ recipe }}
+            className='flex flex-col bg-primary-light dark:bg-sec-dark overflow-hidden relative shadow-sm border dark:border-primary-light'>
             <div className='relative border-b dark:border-b-primary-light'>
                 <img src={getHighResImage(recipe.image || placeholder)} alt="recipe image"
                     loading='lazy'
-                    className='w-full h-[300px] object-cover cursor-pointer' />
+                    className='w-full h-[200px] object-cover cursor-pointer md:h-[250px]' />
                 <button
                     onClick={(e) => {
                         e.stopPropagation();
@@ -59,13 +62,13 @@ const RecipeCard = ({ recipe, placeholder, handleFavClick, isFavorite }) => {
                 {recipe.cuisines && recipe.cuisines.length > 0 ? (
                     <p>
                         {recipe.cuisines.map((cuisine, index) => (
-                            <span key={index} className='mb-1 font-extralight italic text-gray-500 inline-block rounded-md tracking-wide mr-1 dark:text-gray-100'> {cuisine}
+                            <span key={index} className='mb-1 font-light italic text-gray-500 inline-block rounded-md tracking-wide mr-1 dark:text-gray-100'> {cuisine}
                                 {index < recipe.cuisines.length - 1 && " -"}
                             </span>
                         ))}
                     </p>
                 ) : (
-                    <p className='mb-1 font-extralight italic text-gray-500 inline-block rounded-md tracking-wide dark:text-gray-100'> Chef’s secret recipe </p>
+                    <p className='mb-1 font-light italic text-gray-500 inline-block rounded-md tracking-wide dark:text-gray-100'> Chef’s secret recipe </p>
                 )}
 
                 <h3 className='mb-4 font-medium tracking-wide  normal-case'>{recipe.title}</h3>
@@ -78,15 +81,13 @@ const RecipeCard = ({ recipe, placeholder, handleFavClick, isFavorite }) => {
                         <IonIcon name='alarm' className='text-[28px]' />
                         <p> {recipe.readyInMinutes} Mins</p>
                     </div>
-                    <Link to={`/recipe/${recipe.id}`}
-                        state={{ recipe }}
-                        className='flex items-center border-l border-black px-6 py-4 text-black bg-accent hover:bg-accent-darker dark:border-l-primary-light transition duration-500'>
-                        View Now
 
-                    </Link>
+                    <div className='flex items-center border-l border-black px-6 py-4 text-black bg-accent hover:bg-accent-darker dark:border-l-primary-light transition duration-500'>
+                        <p>View Now</p>
+                    </div>
                 </div>
             </div>
-        </div>
+        </Link>
 
     );
 };

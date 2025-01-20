@@ -14,24 +14,29 @@ export default function Home({ savedFavs, toggleFav }) {
     const apiKey = 'cf116ecafaab4cda83a585339c3346de';
 
     useEffect(() => {
+        // Retrieve stored recipes and the last fetch date from local storage
         const storedRecipes = localStorage.getItem("recipesOfTheDay");
         const lastFetchDate = localStorage.getItem("lastFetchDate");
         const today = new Date().toISOString().split("T")[0];
 
+        // Clear local storage if the stored date is not today (to refresh daily data)
         if (lastFetchDate !== today) {
             localStorage.clear();
         }
 
+        //  Use stored recipes if they were fetched today to avoid unnecessary API calls
         if (storedRecipes && lastFetchDate === today) {
-            // Use stored recipes if they were fetched today
+
             setDayRecipes(JSON.parse(storedRecipes));
+
         } else {
-            // Fetch 3 new recipes and store them
+
+            // else fetch 3 new recipes and store them
             fetch(`https://api.spoonacular.com/recipes/random?apiKey=${apiKey}&number=3`)
                 .then((response) => response.json())
                 .then((data) => {
-                    console.log('Fetched recipes:', data);
 
+                    // Check if the response contains valid recipes, update the state with new recipes, and store them in local storage
                     if (data.recipes && data.recipes.length > 0) {
                         setDayRecipes(data.recipes);
                         localStorage.setItem("recipesOfTheDay", JSON.stringify(data.recipes));
@@ -45,16 +50,15 @@ export default function Home({ savedFavs, toggleFav }) {
     }, []);
 
 
-
     return (
         <>
             <section className='max-w-container overflow-hidden h-full mt-10'>
-                <div className='relative h-[60vh] bg-white overflow-hidden px-2 md:px-6 lg:px-10 dark:border dark:border-primary-light dark:border-opacity-20'>
+                <div className='relative h-[55vh] bg-white overflow-hidden px-2 md:px-6 lg:px-10 dark:border dark:border-primary-light dark:border-opacity-20'>
                     <div className='relative z-20 flex flex-col justify-center h-full text-white'>
                         <h1 className='text-center md:text-left'>Welcome to Nomly!</h1>
-                        <h2 className='pt-6 px-4 text-white font-light leading-snug max-w-[60rem] text-center mx-auto md:text-left md:mx-0 md:px-0'>  Where you can discover delicious recipes, save your favorites, and create grocery lists with ease.
-                        </h2>
-                        <div className="mt-10 mx-auto md:mx-0">
+                        <h3 className='capitalize pt-6 px-4 text-white font-light leading-snug max-w-[40rem] text-center mx-auto md:text-left md:mx-0 md:px-0'>  Where you can discover delicious recipes, save your favorites, and create grocery lists with ease.
+                        </h3>
+                        <div className="mt-10 mx-auto md:mx-0 ">
                             <NavLink
                                 to="/browse"
                                 className="relative font-montserrat text-xl px-4 py-3 text-black bg-accent hover:bg-accent-darker rounded-lg transition duration-500 shadow-md inline-flex justify-center items-center group"
@@ -78,7 +82,7 @@ export default function Home({ savedFavs, toggleFav }) {
             </section>
 
 
-            <section className='flex flex-col gap-10 max-w-container my-10 md:flex-row'>
+            <section className='flex flex-col gap-10 max-w-container my-10 md:flex-row '>
                 <Link to='/favorite' className="flex-1 h-full bg-white relative overflow-hidden group dark:border dark:border-primary-light dark:border-opacity-20">
                     <div className="absolute inset-0 flex flex-col justify-center items-center bg-black bg-opacity-40 group-hover:backdrop-blur-sm transition-all duration-500">
                         <h2
@@ -90,7 +94,7 @@ export default function Home({ savedFavs, toggleFav }) {
                             You have <span className='text-2xl px-2 font-medium text-white'> {savedFavs.length}</span> saved recipes
                         </h4>
                     </div>
-                    <img src={fav} alt="favorite recipe" />
+                    <img src={fav} alt="favorite recipe" className='' />
                 </Link>
                 <Link to='/list' className="flex-1 h-full bg-white relative overflow-hidden group dark:border dark:border-primary-light dark:border-opacity-10">
                     <div className="absolute inset-0 flex flex-col justify-center items-center bg-black bg-opacity-40  group-hover:backdrop-blur-sm transition-all duration-500">
@@ -115,7 +119,7 @@ export default function Home({ savedFavs, toggleFav }) {
                         <h2 className="text-black dark:text-white">Recipes of the Day</h2>
                     </div>
 
-                    <div className='grid md:grid-cols-2 lg:grid-cols-3 gap-6'>
+                    <div className='grid  md:grid-cols-2 lg:grid-cols-3 gap-6'>
                         {dayRecipes && dayRecipes.length > 0 ? (
                             dayRecipes.map((recipe) => {
                                 return (

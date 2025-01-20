@@ -13,21 +13,18 @@ export default function Fav({ savedFavs = [], toggleFav }) {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
 
-    useEffect(() => {
-        if (!savedFavs || savedFavs.length === 0) {
-            console.warn('No valid favorites in savedFavs');
+    const fetchFavRecipes = () => {
+        setLoading(true);
+        //removes duplicates
+        const uniqueFavs = [...new Set(savedFavs)];
+
+        if (uniqueFavs.length === 0) {
             setFavRecipes([]);
             setLoading(false);
             return;
         }
 
-        const uniqueFavs = [...new Set(savedFavs)];  // Remove duplicates
-        setLoading(true);
-
-        const url = `https://api.spoonacular.com/recipes/informationBulk?apiKey=${apiKey}&ids=${uniqueFavs.join(',')}`;
-        console.log('Fetching URL:', url);
-
-        fetch(url)
+        fetch(`https://api.spoonacular.com/recipes/informationBulk?apiKey=${apiKey}&ids=${uniqueFavs.join(',')}`)
             .then((response) => {
                 if (!response.ok) {
                     throw new Error(`HTTP error! Status: ${response.status}`);
@@ -35,22 +32,28 @@ export default function Fav({ savedFavs = [], toggleFav }) {
                 return response.json();
             })
             .then((data) => {
-                console.log('Fetched Data:', data);
                 setFavRecipes(data);
-                setLoading(false);
             })
             .catch((err) => {
                 console.error('Error fetching favorite recipes:', err);
                 setError('Failed to load favorite recipes. Please try again later.');
+            })
+            .finally(() => {
                 setLoading(false);
             });
-    }, [savedFavs]);
+    };
 
+    // UseEffect to fetch recipes only if necessary
+    useEffect(() => {
+        if (favRecipes.length === savedFavs.length) return; // Avoid unnecessary fetch
+        fetchFavRecipes();
+    }, [savedFavs]);
 
 
 
     if (loading) return <p>Loading...</p>;
     if (error) return <p>{error}</p>;
+
 
     return (
         <section className='h-full pb-10'>

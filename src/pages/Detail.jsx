@@ -61,7 +61,7 @@ export default function Detail({ addIngredients }) {
 
     return (
         <>
-            <section className='py-10 flex flex-col gap-4 max-w-container'>
+            <section className='pt-10 pb-[6rem] flex flex-col gap-4 max-w-container lg:py-10'>
                 <div className='flex flex-col-reverse gap-4 lg:flex-row'>
                     <div className='basis-[60%]'>
                         <div className='flex flex-col gap-4 h-full'>
@@ -146,7 +146,7 @@ export default function Detail({ addIngredients }) {
                         </div>
                     </div>
 
-                    <div className="border py-4 relative w-full basis-[35%] dark:bg-sec-dark dark:border-white">
+                    <div className="border py-4 relative w-full basis-[35%] bg-primary-light dark:bg-sec-dark dark:border-white">
                         <div className="absolute top-0 left-0 bg-sec-light text-white w-full p-2 border-b dark:border-b-primary-light">
                             <h3>Ingredients</h3>
                         </div>
@@ -168,7 +168,7 @@ export default function Detail({ addIngredients }) {
                                             type="checkbox"
                                             id={`ingredient-${item.id}`}
                                             value={`${item.amount} ${item.unit} ${item.name}`}
-                                            className="mr-2 w-4 h-4 cursor-pointer"
+                                            className="mr-2 w-4 h-4 cursor-pointer detail-input"
                                         />
                                         <label
                                             htmlFor={`ingredient-${item.id}`}

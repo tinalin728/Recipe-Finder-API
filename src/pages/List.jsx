@@ -37,11 +37,12 @@ export default function List({ groceryList, removeIngredient }) {
     return (
         <section className="relative">
             <div className='max-w-container py-10 relative z-10 h-full'>
-                <h2 className="uppercase border-b my-10 pb-4 text-center md:text-left dark:border-b-primary-light">
+                <h2 className="uppercase border-b pb-4 text-center md:text-left dark:border-b-primary-light">
                     My Shopping List
                 </h2>
 
-                <div className='h-full'>
+
+                <div className='h-full mt-10 flex-1 '>
                     <form onSubmit={handleAddItem} className="flex items-center mb-6">
                         <input
                             type="text"
@@ -62,8 +63,14 @@ export default function List({ groceryList, removeIngredient }) {
                         <ul className="custom-list list-none min-h-[80vh] bg-primary-light dark:bg-sec-dark p-4 border rounded-lg dark:border-primary-light">
                             {groceryList.map((item, index) => (
                                 <li key={index} className="py-4 border-b border-dashed dark:border-b-white">
-                                    <div className='flex items-center justify-between '>
-                                        <span>{item}</span>
+                                    <div className='flex items-center justify-between'>
+                                        <label className='flex items-center gap-2'>
+                                            <input
+                                                type="checkbox"
+                                                className="w-5 h-5 cursor-pointer accent-primary dark:accent-accent custom-checkbox text-green"
+                                            />
+                                            <span>{item}</span>
+                                        </label>
                                         <button
                                             onClick={() => removeIngredient(item)}
                                             className="text-red-500 hover:underline"
@@ -74,11 +81,10 @@ export default function List({ groceryList, removeIngredient }) {
                                 </li>
                             ))}
                         </ul>
-
-
                     ) : (
                         <p className="text-gray-500">Your list is empty. Add some items!</p>
                     )}
+
                 </div>
             </div>
         </section>

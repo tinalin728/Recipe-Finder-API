@@ -14,10 +14,13 @@ export default function Browse({ toggleFav, savedFavs }) {
     // const apiKey = '94223c8104e6456d88cf145ec6ecdf6b';
     const apiKey = 'cf116ecafaab4cda83a585339c3346de';
 
+    //function to search for recipes based on the entered search term
     const searchRecipes = () => {
+        //fetch random recipes from API
         fetch(`https://api.spoonacular.com/recipes/random?apiKey=${apiKey}&number=10`)
             .then(response => response.json())
             .then(data => {
+                //filter recipes based on the search term entered by the user
                 const filteredRecipes = data.recipes.filter((recipe) =>
                     recipe.title.toLowerCase().includes(searchTerm.toLowerCase())
                 );
@@ -26,9 +29,9 @@ export default function Browse({ toggleFav, savedFavs }) {
             .catch((error) => console.error("Error fetching recipes:", error));
     };
 
-
+    //fetch 12 random recipes
     useEffect(() => {
-        fetch(`https://api.spoonacular.com/recipes/random?apiKey=${apiKey}&number=10`)
+        fetch(`https://api.spoonacular.com/recipes/random?apiKey=${apiKey}&number=12`)
             .then(response => response.json())
             .then(data => setRecipes(data.recipes))
             .catch((error) => console.error("Error fetching recipes:", error));
@@ -44,8 +47,8 @@ export default function Browse({ toggleFav, savedFavs }) {
 
     return (
         <>
-            <section className='max-w-container'>
-                <h2 className="uppercase my-10 pb-4 border-b dark:border-b-primary-light text-center md:text-left">Browse Recipes</h2>
+            <section className='max-w-container pt-10 pb-[6rem] lg:py-10'>
+                <h2 className="uppercase pb-4 border-b dark:border-b-primary-light text-center md:text-left">Browse Recipes</h2>
 
                 <div className=" mt-6">
                     <div className="w-full flex items-center">
