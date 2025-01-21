@@ -102,7 +102,7 @@ export default function Navbar() {
                             <NavLink
                                 to="/"
                                 className={({ isActive }) =>
-                                    `flex items-center gap-2 pl-4 py-4 ${isActive ? "bg-dark-bg text-white rounded-md dark:text-black dark:bg-primary-light" : ""
+                                    `flex items-center gap-2 pl-4 py-4 ${isActive ? "bg-dark-bg text-white rounded-md dark:bg-sec-dark" : ""
                                     }`}
                             >
                                 {({ isActive }) => (
@@ -116,7 +116,7 @@ export default function Navbar() {
                         </li>
                         <li className='list-none w-full hover:bg-gray-100 dark:hover:bg-gray-700 rounded-md'>
                             <NavLink to='/browse' className={({ isActive }) =>
-                                `flex items-center gap-2 py-4 pl-4 ${isActive ? "bg-dark-bg text-white rounded-md dark:text-black dark:bg-primary-light" : ""
+                                `flex items-center gap-2 py-4 pl-4 ${isActive ? "bg-dark-bg text-white rounded-md dark:bg-sec-dark" : ""
                                 }`}>
                                 {({ isActive }) => (
                                     <>
@@ -131,7 +131,7 @@ export default function Navbar() {
 
                         <li className='list-none w-full  hover:bg-gray-100 dark:hover:bg-gray-700 rounded-md'>
                             <NavLink to='/favorite' className={({ isActive }) =>
-                                `flex items-center gap-2 py-4 pl-4 ${isActive ? "bg-dark-bg text-white rounded-md dark:text-black dark:bg-primary-light" : ""
+                                `flex items-center gap-2 py-4 pl-4 ${isActive ? "bg-dark-bg text-white rounded-md dark:bg-sec-dark" : ""
                                 }`}
                             >
                                 {({ isActive }) => (
@@ -146,7 +146,7 @@ export default function Navbar() {
                         </li>
                         <li className='list-none w-full hover:bg-gray-100 dark:hover:bg-gray-700 rounded-md'>
                             <NavLink to='/list' className={({ isActive }) =>
-                                `flex items-center gap-2 py-4 pl-4 ${isActive ? "bg-dark-bg text-white rounded-md dark:text-black dark:bg-primary-light" : ""
+                                `flex items-center gap-2 py-4 pl-4 ${isActive ? "bg-dark-bg text-white rounded-md dark:bg-sec-dark" : ""
                                 }`}>
                                 {({ isActive }) => (
                                     <>
