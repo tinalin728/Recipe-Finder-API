@@ -164,12 +164,12 @@ export default function Detail({ addIngredients }) {
                         >
                             <ul className="pl-4 mt-10">
                                 {recipe.extendedIngredients.map((item) => (
-                                    <li key={item.id} className="my-4 flex items-center">
+                                    <li key={item.id} className="my-4 flex items-center detail-input">
                                         <input
                                             type="checkbox"
                                             id={`ingredient-${item.id}`}
                                             value={`${item.amount} ${item.unit} ${item.name}`}
-                                            className="mr-2 w-4 h-4 cursor-pointer detail-input"
+                                            className="mr-2 w-4 h-4 cursor-pointer"
                                         />
                                         <label
                                             htmlFor={`ingredient-${item.id}`}
