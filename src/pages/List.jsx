@@ -35,8 +35,8 @@ export default function List({ groceryList, removeIngredient }) {
 
 
     return (
-        <section className="relative">
-            <div className='max-w-container py-10 relative z-10 h-full'>
+        <section className="relative pt-10 pb-[6rem] lg:py-10">
+            <div className='max-w-container relative z-10 h-full'>
                 <h2 className="uppercase border-b pb-4 text-center md:text-left dark:border-b-primary-light">
                     My Shopping List
                 </h2>

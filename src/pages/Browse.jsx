@@ -10,6 +10,8 @@ export default function Browse({ toggleFav, savedFavs }) {
     const cuisines = ['Italian', "French", "Chinese", "Korean"];
     const [selectedCuisine, setSelectedCuisine] = useState(null);
     const [searchTerm, setSearchTerm] = useState("");
+    const [showFilter, setShowFilter] = useState(false);
+
 
     const apiKey = '94223c8104e6456d88cf145ec6ecdf6b';
     // const apiKey = 'cf116ecafaab4cda83a585339c3346de';
@@ -76,33 +78,53 @@ export default function Browse({ toggleFav, savedFavs }) {
                             <IonIcon name="search" className="text-3xl" />
                         </button>
                     </div>
-                    <p className='mt-2'>Popular Search Terms: Pasta, Chicken Teriyaki</p>
+                    <p className='mt-2 font-light'>Popular Search Terms: Pasta, Chicken Teriyaki</p>
                 </div>
-                <div className='flex justify-between w-full mb-6'>
-                    <div className='flex gap-4'>
-                        {
-                            cuisines.map((cuisine, index) => (
-                                <div key={index} className={`px-6 py-2 border w-fit rounded-full bg-transparent hover:bg-primary-light cursor-pointer ${selectedCuisine === cuisine ? 'bg-dark-bg text-white dark:bg-primary-light dark:text-black' : ''}`}
-                                    onClick={() => handleFilter(cuisine)}
-                                >
-                                    <p className='tracking-wide text-lg'> {cuisine} </p>
-                                </div>
-                            ))
-                        }
 
+                <div className='py-4 border-t border-b mb-10 dark:border-t-primary-light dark:border-b-primary-light'>
+                    <div className='flex justify-between'>
+                        <button onClick={() => setShowFilter(!showFilter)}
+                            className='block md:hidden'>
+                            <IonIcon name='filter' className='text-[28px] p-2' />
+                        </button>
+                        <button
+                            className='tracking-wide text-lg block md:hidden'
+                            onClick={() => {
+                                setSelectedCuisine(null);
+                                fetch(`https://api.spoonacular.com/recipes/random?apiKey=${apiKey}&number=12`)
+                                    .then(response => response.json())
+                                    .then(data => setRecipes(data.recipes))
+                                    .catch((error) => console.error("Error fetching recipes:", error));
+                            }}
+                        >
+                            Reset Filter
+                        </button>
                     </div>
-                    <button
-                        className='tracking-wide text-lg px-6 py-2 border w-fit rounded-full bg-transparent hover:bg-primary-light cursor-pointer'
-                        onClick={() => {
-                            setSelectedCuisine(null);
-                            fetch(`https://api.spoonacular.com/recipes/random?apiKey=${apiKey}&number=12`)
-                                .then(response => response.json())
-                                .then(data => setRecipes(data.recipes))
-                                .catch((error) => console.error("Error fetching recipes:", error));
-                        }}
-                    >
-                        Reset Filter
-                    </button>
+                    <div className={`${showFilter ? 'block mt-2' : 'hidden'} md:flex md:flex-wrap md:justify-between md:w-full lg:flex-row items-center  md:gap-4`}>
+                        <div className='flex flex-wrap gap-4 lg:flex-row'>
+                            {
+                                cuisines.map((cuisine, index) => (
+                                    <div key={index} className={`px-6 py-1 border w-fit rounded-full cursor-pointer dark:border-primary-light ${selectedCuisine === cuisine ? 'bg-dark-bg text-white dark:bg-primary-light dark:text-black' : 'bg-transparent hover:bg-primary-light dark:hover:bg-sec-dark'}`}
+                                        onClick={() => handleFilter(cuisine)}
+                                    >
+                                        <p className='tracking-wide text-lg'> {cuisine} </p>
+                                    </div>
+                                ))
+                            }
+                        </div>
+                        <button
+                            className='tracking-wide text-lg hidden md:block'
+                            onClick={() => {
+                                setSelectedCuisine(null);
+                                fetch(`https://api.spoonacular.com/recipes/random?apiKey=${apiKey}&number=12`)
+                                    .then(response => response.json())
+                                    .then(data => setRecipes(data.recipes))
+                                    .catch((error) => console.error("Error fetching recipes:", error));
+                            }}
+                        >
+                            Reset Filter
+                        </button>
+                    </div>
                 </div>
 
                 <div className="grid gap-6 grid-cols-1 md:grid-cols-2 lg:grid-cols-3">

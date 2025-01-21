@@ -8,8 +8,6 @@ import RecipeCard from '../components/RecipeCard';
 import placeholder from '../../public/assets/noImg.jpg'
 
 export default function Home({ savedFavs, toggleFav }) {
-
-
     const [dayRecipes, setDayRecipes] = useState(null);
     // const apiKey = '94223c8104e6456d88cf145ec6ecdf6b';
     const apiKey = 'cf116ecafaab4cda83a585339c3346de';
@@ -111,7 +109,6 @@ export default function Home({ savedFavs, toggleFav }) {
                     <img src={list} alt="shopping list" />
                 </Link>
             </section>
-
 
 
             <section className='max-w-container mt-10 mb-20'>
