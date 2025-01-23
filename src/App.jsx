@@ -54,8 +54,7 @@ function App() {
     <Router>
       <Navbar />
       <Routes>
-        <Route path='/' element={<Home savedFavs={savedFavs} toggleFav={toggleFav} />} />
-        <Route path='/browse' element={<Browse savedFavs={savedFavs} toggleFav={toggleFav} />} />
+        <Route path='/' element={<Browse savedFavs={savedFavs} toggleFav={toggleFav} />} />
         <Route path='/list' element={<List groceryList={groceryList} removeIngredient={removeIngredient} />} />
         <Route path='/favorite' element={<Fav savedFavs={savedFavs} toggleFav={toggleFav} />} />
         <Route path='/recipe/:id' element={<Detail addIngredients={addIngredients} />} />

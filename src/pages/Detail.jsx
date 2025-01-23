@@ -44,7 +44,7 @@ export default function Detail({ addIngredients }) {
         }
     }, [])
 
-    console.log('Recipe Data:', recipe);
+    // console.log('Recipe Data:', recipe);
 
     if (!recipe) return <p>No recipe details available.</p>;
 

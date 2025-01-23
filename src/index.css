@@ -17,8 +17,8 @@
     .max-w-container {
         max-width: 110rem;
         margin: 0 auto;
-        padding: 0 2rem;
         overflow-x: hidden;
+        @apply px-5 md:px-6 lg:px-8
     }
 
     @media (min-width: 1024px) {
@@ -42,7 +42,7 @@
     }
 
     h3 {
-        @apply text-xl font-montserrat uppercase tracking-wider
+        @apply text-base font-montserrat uppercase md:text-xl
     }
 
     h4 {
@@ -137,4 +137,21 @@
 
     }
 
+    .filter-icon {
+        filter: none;
+        position: relative;
+        z-index: 2;
+    }
+
+    .dark .filter-icon-wrapper::before {
+        content: '';
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        background-color: white;
+        border-radius: 50%;
+        /* Ensuring a circular background */
+        z-index: 1;
+        filter: brightness(2);
+    }
 }

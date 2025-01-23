@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg id="Layer_2" data-name="Layer 2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 198 278">
+  <defs>
+    <style>
+      .cls-1 {
+        fill: none;
+        stroke: #4c4c4e;
+        stroke-linecap: round;
+        stroke-linejoin: round;
+        stroke-width: 8px;
+      }
+    </style>
+  </defs>
+  <g id="Icons">
+    <g>
+      <polyline class="cls-1" points="94 144 104 144 124 144 164 144 144 274 94 274"/>
+      <polyline class="cls-1" points="94 144 84 144 24 144 44 274 94 274"/>
+      <polyline class="cls-1" points="94 184 134 184 164 144 184 94"/>
+      <polyline class="cls-1" points="94 184 54 184 24 144 4 94"/>
+      <line class="cls-1" x1="84" y1="54" x2="44" y2="54"/>
+      <line class="cls-1" x1="194" y1="54" x2="124" y2="54"/>
+      <line class="cls-1" x1="184" y1="4" x2="44" y2="34"/>
+      <line class="cls-1" x1="104" y1="144" x2="104" y2="44"/>
+      <path class="cls-1" d="M124,144V49c0-2.8-2.2-5-5-5h-30c-2.8,0-5,2.2-5,5v95"/>
+    </g>
+  </g>
+</svg>

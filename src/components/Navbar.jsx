@@ -27,18 +27,8 @@ export default function Navbar() {
             <div className='block lg:hidden fixed bottom-0 z-[999] w-full border-t py-3 bg-white dark:bg-primary-dark dark:text-primary-light dark:border-t-primary-light dark:border-opacity-20'>
                 <nav className='max-w-container'>
                     <ul className='bg-green w-full flex justify-center items-center px-2 gap-10 md:gap-20'>
-                        <li className='list-none flex justify-between items-center'>
-                            <NavLink to='/' className={({ isActive }) => `flex flex-col justify-center items-center  ${isActive ? 'text-primary-dark dark:text-accent' : 'text-gray-500 dark:text-gray-300'}`} >
-                                {({ isActive }) => (
-                                    <>
-                                        <IonIcon name={isActive ? "home" : "home-outline"} className='text-[25px]' />
-                                        <span className='mt-1 text-[12px]'>Home</span>
-                                    </>
-                                )}
-                            </NavLink>
-                        </li>
                         <li className='list-none'>
-                            <NavLink to='/browse' className={({ isActive }) => `flex flex-col justify-center items-center ${isActive ? 'text-primary-dark dark:text-accent' : 'text-gray-500 dark:text-gray-300'}`}>
+                            <NavLink to='/' className={({ isActive }) => `flex flex-col justify-center items-center ${isActive ? 'text-primary-dark dark:text-accent' : 'text-gray-500 dark:text-gray-300'}`}>
                                 {({ isActive }) => (
                                     <>
                                         <IonIcon name={isActive ? "earth" : "earth-outline"} className='text-[25px]' />
@@ -99,23 +89,7 @@ export default function Navbar() {
                 <nav className='mt-6 h-full px-2'>
                     <ul className='flex flex-col items-start gap-2'>
                         <li className='list-none w-full hover:bg-gray-100 dark:hover:bg-gray-700 rounded-md'>
-                            <NavLink
-                                to="/"
-                                className={({ isActive }) =>
-                                    `flex items-center gap-2 pl-4 py-4 ${isActive ? "bg-dark-bg text-white rounded-md dark:bg-sec-dark" : ""
-                                    }`}
-                            >
-                                {({ isActive }) => (
-                                    <>
-                                        <IonIcon name={isActive ? "home" : "home-outline"} className='text-[30px]' />
-                                        <span className=''>Home</span>
-                                    </>
-                                )}
-
-                            </NavLink>
-                        </li>
-                        <li className='list-none w-full hover:bg-gray-100 dark:hover:bg-gray-700 rounded-md'>
-                            <NavLink to='/browse' className={({ isActive }) =>
+                            <NavLink to='/' className={({ isActive }) =>
                                 `flex items-center gap-2 py-4 pl-4 ${isActive ? "bg-dark-bg text-white rounded-md dark:bg-sec-dark" : ""
                                 }`}>
                                 {({ isActive }) => (

@@ -31,7 +31,7 @@ export default function Home({ savedFavs, toggleFav }) {
         } else {
 
             // else fetch 3 new recipes and store them
-            fetch(`https://api.spoonacular.com/recipes/random?apiKey=${apiKey}&number=3`)
+            fetch(`https://api.spoonacular.com/recipes/random?apiKey=${apiKey}&number=4`)
                 .then((response) => response.json())
                 .then((data) => {
 
@@ -52,7 +52,7 @@ export default function Home({ savedFavs, toggleFav }) {
     return (
         <>
             <section className='max-w-container overflow-hidden h-full mt-10'>
-                <div className='relative h-[55vh] bg-white overflow-hidden px-2 md:px-6 lg:px-10 dark:border dark:border-primary-light dark:border-opacity-20'>
+                <div className='relative h-[55vh] bg-white rounded-2xl overflow-hidden px-2 md:px-6 lg:px-10 dark:border dark:border-primary-light dark:border-opacity-20'>
                     <div className='relative z-20 flex flex-col justify-center h-full text-white'>
                         <h1 className='text-center md:text-left'>Welcome to Nomly!</h1>
                         <h3 className='capitalize pt-6 px-4 text-white font-light leading-snug max-w-[40rem] text-center mx-auto md:text-left md:mx-0 md:px-0'>  Where you can discover delicious recipes, save your favorites, and create grocery lists with ease.
@@ -81,8 +81,8 @@ export default function Home({ savedFavs, toggleFav }) {
             </section>
 
 
-            <section className='flex flex-col gap-10 max-w-container my-10 md:flex-row '>
-                <Link to='/favorite' className="flex-1 h-full bg-white relative overflow-hidden group dark:border dark:border-primary-light dark:border-opacity-20">
+            <section className='flex flex-col gap-10 max-w-container my-10 md:flex-row'>
+                <Link to='/favorite' className="flex-1 h-full bg-white relative overflow-hidden group dark:border dark:border-primary-light dark:border-opacity-20 rounded-2xl">
                     <div className="absolute inset-0 flex flex-col justify-center items-center bg-black bg-opacity-40 group-hover:backdrop-blur-sm transition-all duration-500">
                         <h2
                             className="text-white transform transition-transform duration-500 group-hover:translate-y-[-10px]">
@@ -95,7 +95,7 @@ export default function Home({ savedFavs, toggleFav }) {
                     </div>
                     <img src={fav} alt="favorite recipe" className='' />
                 </Link>
-                <Link to='/list' className="flex-1 h-full bg-white relative overflow-hidden group dark:border dark:border-primary-light dark:border-opacity-10">
+                <Link to='/list' className="flex-1 h-full bg-white relative overflow-hidden group dark:border dark:border-primary-light dark:border-opacity-10 rounded-2xl">
                     <div className="absolute inset-0 flex flex-col justify-center items-center bg-black bg-opacity-40  group-hover:backdrop-blur-sm transition-all duration-500">
                         <h2
                             className="text-white transform transition-transform duration-500 group-hover:translate-y-[-10px]">
@@ -111,14 +111,14 @@ export default function Home({ savedFavs, toggleFav }) {
             </section>
 
 
-            <section className='max-w-container mt-10 mb-20'>
+            <section className='max-w-container pb-[6rem] lg:py-10'>
                 <div className='relative overflow-hidden'>
                     <div className="z-10 flex items-center gap-2 mb-4">
                         <IonIcon name="star" className="text-[28px] text-yellow-400" />
                         <h2 className="text-black dark:text-white">Recipes of the Day</h2>
                     </div>
 
-                    <div className='grid  md:grid-cols-2 lg:grid-cols-3 gap-6'>
+                    <div className='grid gap-4 md:grid-cols-2 md:gap-6 lg:grid-cols-4'>
                         {dayRecipes && dayRecipes.length > 0 ? (
                             dayRecipes.map((recipe) => {
                                 return (
@@ -129,15 +129,15 @@ export default function Home({ savedFavs, toggleFav }) {
                                         isFavorite={savedFavs.includes(recipe.id)}
                                         handleFavClick={() => toggleFav(recipe.id)}
                                     />
-                                )
+                                );
                             })
                         ) : (
                             <p className="p-6 text-gray-500">Loading Recipes of the Day...</p>
                         )}
                     </div>
+
                 </div>
             </section>
         </>
-
     )
 }

@@ -1,4 +1,4 @@
-import { Navigate, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import RecipeCard from '../components/RecipeCard';
 import placeholder from '../../public/assets/noImg.jpg';
 import { useEffect, useState } from 'react';
@@ -15,7 +15,7 @@ export default function Fav({ savedFavs = [], toggleFav }) {
 
     const fetchFavRecipes = () => {
         setLoading(true);
-        //removes duplicates
+        // Removes duplicates
         const uniqueFavs = [...new Set(savedFavs)];
 
         if (uniqueFavs.length === 0) {
@@ -49,21 +49,28 @@ export default function Fav({ savedFavs = [], toggleFav }) {
         fetchFavRecipes();
     }, [savedFavs]);
 
-
-
-    if (loading) return <p>Loading...</p>;
-    if (error) return <p>{error}</p>;
-
-
     return (
         <section className='h-full pb-[8rem] lg:pb-10'>
             <div className="max-w-container">
-                <h2 className="uppercase my-10 pb-4 border-b dark:border-b-primary-light text-center md:text-left">My Saved Recipes</h2>
+                <h2 className="uppercase my-10 pb-4 border-b dark:border-b-primary-light text-center md:text-left">
+                    My Saved Recipes
+                </h2>
 
-                {favRecipes.length === 0 ? (
+                {loading ? (
+                    <p className="text-center text-gray-500">Loading...</p>
+                ) : error ? (
+                    <div className="text-center text-red-500">
+                        <p>{error}</p>
+                    </div>
+                ) : favRecipes.length === 0 ? (
                     <div className="text-center h-screen">
-                        <h1 className="p-2 inline-black">Time to build your recipes</h1>
-                        <button onClick={() => navigate('/')}> Back to Home Page</button>
+                        <h1 className="p-2 inline-block">Time to build your recipes</h1>
+                        <button
+                            onClick={() => navigate('/')}
+                            className="mt-4 px-6 py-2 bg-accent text-white rounded-md hover:bg-accent-darker"
+                        >
+                            Back to Home Page
+                        </button>
                     </div>
                 ) : (
                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
