@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from 'react';
+import fetchRecipes from '../hooks/fetchRecipes';
 import IonIcon from '@reacticons/ionicons';
 import RecipeCard from '../components/RecipeCard';
+import { storeData, getStoredData } from '../utils/storage';
 import placeholder from '../../public/assets/noImg.jpg';
 import rice from '../../public/assets/rice.svg'
 import riceWhite from '../../public/assets/rice-white.svg'
@@ -11,7 +13,11 @@ import burgerWhite from '../../public/assets/burger-white.svg'
 import vegetarian from '../../public/assets/vegie.svg'
 import vegetarianWhite from '../../public/assets/vegie-white.svg'
 
+
+
 export default function Browse({ toggleFav, savedFavs }) {
+    const apiKey = import.meta.env.VITE_API_KEY;
+
     const [filteredRecipes, setFilteredRecipes] = useState(null);
     const [showFiltered, setShowFiltered] = useState(false);
     const filters = [
@@ -23,90 +29,98 @@ export default function Browse({ toggleFav, savedFavs }) {
 
     const [selectedFilter, setSelectedFilter] = useState(null);
     const [searchTerm, setSearchTerm] = useState("");
-    const apiKey = 'cf116ecafaab4cda83a585339c3346de';
+    // const apiKey = 'cf116ecafaab4cda83a585339c3346de';
 
-    const [dayRecipes, setDayRecipes] = useState([]);
-    const [winterComfortFood, setWinterComfortFood] = useState([]);
+    // Fetch initial categories only (not filters)
+    const { recipes: dayRecipes, isLoading: dayLoading } = fetchRecipes("recipesOfTheDay", "", "random");
+    const { recipes: winterComfortFood, isLoading: winterLoading } = fetchRecipes("winterComfortFood", "soup,stew", "complexSearch");
 
-    // Function to fetch category recipes (initial categories only)
-    const fetchCategoryRecipes = (key, query, apiType, setState) => {
-        const storedRecipes = localStorage.getItem(key);
-        const lastFetchDate = localStorage.getItem(`${key}_date`);
-        const today = new Date().toISOString().split("T")[0];
 
-        if (storedRecipes && lastFetchDate === today) {
-            setState(JSON.parse(storedRecipes));
-        } else {
-            let apiUrl;
-            if (apiType === "random") {
-                apiUrl = `https://api.spoonacular.com/recipes/random?apiKey=${apiKey}&number=4`;
-            } else if (apiType === "menuItems") {
-                apiUrl = `https://api.spoonacular.com/food/menuItems/search?apiKey=${apiKey}&query=${query}&number=4`;
-            }
+    //function for second fetch if initial fetch has no recipe.extendedIngredients
+    const fetchDetailedRecipe = async (recipe) => {
+        if (!recipe.id) return recipe; // Ensure the recipe has an ID
 
-            fetch(apiUrl)
-                .then((response) => {
-                    if (!response.ok) {
-                        throw new Error(`API limit exceeded or network issue. Status: ${response.status}`);
-                    }
-                    return response.json();
-                }).then((data) => {
-                    const recipeResults = data.results || data.recipes || data.menuItems;
-                    if (recipeResults && recipeResults.length > 0) {
-                        setState(recipeResults);
-                        localStorage.setItem(key, JSON.stringify(recipeResults));
-                        localStorage.setItem(`${key}_date`, today);
-                    } else {
-                        console.error(`No recipes found for query: ${query}`);
-                    }
-                })
-                .catch((error) => {
-                    console.error(`Error fetching ${key}:`, error);
-                    alert("Oops! You've reached the API request limit. Please try again later.");
+        try {
+            const response = await fetch(`https://api.spoonacular.com/recipes/${recipe.id}/information?apiKey=${apiKey}&includeNutrition=false`);
+            if (!response.ok) throw new Error(`Error fetching detailed recipe: ${response.status}`);
 
-                });
+            const detailedRecipe = await response.json();
+            return detailedRecipe.extendedIngredients ? detailedRecipe : recipe; // Return the detailed recipe if it has extendedIngredients
+        } catch (error) {
+            console.error("Error fetching detailed recipe details:", error);
+            return recipe; // Return the original recipe if fetch fails
         }
     };
 
-    // Fetch initial categories only (not filters)
-    useEffect(() => {
-        fetchCategoryRecipes("recipesOfTheDay", "", "random", setDayRecipes);
-        fetchCategoryRecipes("winterComfortFood", "soup", "menuItems", setWinterComfortFood);
-    }, []);
 
     // Function to handle category filter
-    const handleFilter = (filter) => {
+    const handleFilter = async (filter) => {
         setSelectedFilter(filter);
         setShowFiltered(true);
 
-        fetch(`https://api.spoonacular.com/recipes/search?apiKey=${apiKey}&query=${filter}&number=10`)
-            .then(response => response.json())
-            .then(data => {
-                if (data.results) {
-                    setFilteredRecipes(data.results);
-                } else {
-                    console.error("No recipes found for this filter.");
-                }
-            })
-            .catch((error) => console.error("Error fetching recipes:", error));
+        const storageKey = `filtered_${filter}`;
+        const storedRecipes = getStoredData(storageKey);
+
+        if (storedRecipes) {
+            setFilteredRecipes(storedRecipes);
+            return;
+        }
+
+        try {
+            const response = await fetch(`https://api.spoonacular.com/recipes/complexSearch?apiKey=${apiKey}&query=${filter}&number=10`);
+            if (!response.ok) throw new Error(`Error fetching detailed recipe: ${response.status}`);
+
+            const data = await response.json();
+
+            if (data.results && data.results.length > 0) {
+                const fullRecipes = await Promise.all(data.results.map(fetchDetailedRecipe));
+
+                setFilteredRecipes(fullRecipes);
+                storeData(storageKey, fullRecipes);
+            } else {
+                console.error("No recipes found for this filter.");
+                setFilteredRecipes([]);
+            }
+        } catch (error) {
+            console.error("Error fetching recipes:", error);
+            // return null;
+        }
     };
 
+
     // Function to handle search input
-    const searchRecipes = () => {
+    const searchRecipes = async () => {
         if (!searchTerm.trim()) return;
         setShowFiltered(true);
 
-        fetch(`https://api.spoonacular.com/recipes/complexSearch?apiKey=${apiKey}&query=${searchTerm}&number=10`)
-            .then(response => response.json())
-            .then(data => {
-                if (data.results) {
-                    setFilteredRecipes(data.results);
-                } else {
-                    console.error("No recipes found for the search term.");
-                }
-            })
-            .catch((error) => console.error("Error fetching recipes:", error));
+        const storageKey = `search_${searchTerm}`;
+        const storedRecipes = getStoredData(storageKey)
+
+        if (storedRecipes) {
+            setFilteredRecipes(storedRecipes);
+            return;
+        }
+
+        try {
+            const response = await fetch(`https://api.spoonacular.com/recipes/complexSearch?apiKey=${apiKey}&query=${searchTerm}&number=10`);
+            const data = await response.json();
+
+            if (data.results && data.results.length > 0) {
+                const fullRecipes = await Promise.all(
+                    data.results.map(async (recipe) => await fetchDetailedRecipe(recipe))
+                );
+
+                setFilteredRecipes(fullRecipes);
+                storeData(storageKey, fullRecipes);
+            } else {
+                console.error("No recipes found for the search term.");
+                setFilteredRecipes([]);
+            }
+        } catch (error) {
+            console.error("Error fetching recipes:", error);
+        }
     };
+
 
     // Function to reset the view to the original state
     const resetView = () => {
@@ -122,21 +136,29 @@ export default function Browse({ toggleFav, savedFavs }) {
                 <h3 className="text-black dark:text-white normal-case leading-normal font-semibold">{title}</h3>
             </div>
 
-            <div className='grid gap-4 md:grid-cols-2 md:gap-6 lg:grid-cols-4'>
-                {recipes ? recipes.map((recipe) => (
-                    <RecipeCard key={recipe.id} recipe={recipe} placeholder={placeholder} />
-                )) : <p className="p-6 text-gray-500">Loading...</p>}
-            </div>
+            {recipes && recipes.length > 0 ? (
+                <div className='grid gap-4 md:grid-cols-2 md:gap-6 lg:grid-cols-3 2xl:grid-cols-4'>
+                    {recipes.map((recipe) => (
+                        <RecipeCard key={recipe.id}
+                            recipe={recipe}
+                            placeholder={placeholder}
+                            isFavorite={savedFavs.some((fav) => fav.id === recipe.id)}
+                            handleFavClick={() => toggleFav(recipe)}
+                        />
+                    ))}
+                </div>
+            ) : (
+                <h3 className="py-20 text-center border border-gray-500 border-dashed bg-gray-50 h-full normal-case dark:bg-sec-dark dark:border-primary-light ">
+                    {recipes ? "Sorry, We're out of requests for now. Please try again soon! 😓😢" : "Loading..."}
+                </h3>
+            )}
         </section>
     );
+
 
     return (
         <>
             <section className='max-w-container pt-10 pb-[6rem] lg:py-10'>
-                {/* <div className='py-10 bg-white dark:bg-sec-dark'>
-                    <h2 className="pb-2 text-center">Welcome to Nomly!</h2>
-                    <p className=" text-lg text-center px-2"> Discover delicious recipes, save your favorites, and create grocery lists with ease.</p>
-                </div> */}
 
                 <div className="mt-10">
                     <div className="w-full flex items-center">
@@ -145,7 +167,12 @@ export default function Browse({ toggleFav, savedFavs }) {
                             placeholder="Search Your Cravings"
                             value={searchTerm}
                             onChange={(event) => setSearchTerm(event.target.value)}
-                            className="w-full px-5 py-[1.2rem] border border-black focus:outline-none placeholder:tracking-wider placeholder:font-light placeholder:italic"
+                            onKeyDown={(event) => {
+                                if (event.key === 'Enter') {
+                                    searchRecipes();
+                                }
+                            }}
+                            className="w-full px-5 py-[1.2rem] text-black border border-black focus:outline-none placeholder:tracking-wider placeholder:font-light placeholder:italic dark:placeholder:text-gray-800 dark:border-primary-light"
                         />
                         <button
                             className="p-4 flex items-center justify-center bg-accent hover:bg-accent-darker border border-black dark:border-primary-light"
@@ -166,7 +193,7 @@ export default function Browse({ toggleFav, savedFavs }) {
                 </div>
 
                 <div className='py-6 dark:border-t-primary-light'>
-                    <div className='flex flex-wrap gap-8 justify-center lg:flex-row lg:gap-10'>
+                    <div className='flex flex-wrap gap-7 justify-center lg:flex-row lg:gap-10'>
                         {filters.map((filter, index) => (
                             <div
                                 key={index}
@@ -203,16 +230,14 @@ export default function Browse({ toggleFav, savedFavs }) {
                                 </p>
                             </div>
                         ))}
-
-
                     </div>
                 </div>
 
                 {showFiltered ? (
                     <section className='pb-[6rem] lg:pt-2'>
-                        <div className='grid gap-4 md:grid-cols-2 md:gap-6 lg:grid-cols-3 lg:gap-y-10 xl:grid-cols-4'>
-                            {filteredRecipes?.length > 0 ? (
-                                filteredRecipes.map((recipe) => (
+                        {filteredRecipes?.length > 0 ? (
+                            <div className='grid gap-4 md:grid-cols-2 md:gap-6 lg:grid-cols-3 lg:gap-y-10 2xl:grid-cols-4'>
+                                {filteredRecipes.map((recipe) => (
                                     <RecipeCard
                                         key={recipe.id}
                                         recipe={recipe}
@@ -220,12 +245,16 @@ export default function Browse({ toggleFav, savedFavs }) {
                                         isFavorite={savedFavs.includes(recipe.id)}
                                         handleFavClick={() => toggleFav(recipe.id)}
                                     />
-                                ))
-                            ) : (
-                                <p className="p-6 text-gray-500">No recipes found.</p>
-                            )}
-                        </div>
+                                ))}
+                            </div>
+                        ) : (
+                            <div className='flex justify-center items-center py-20 border border-dashed bg-gray-50 h-[50vh] dark:bg-sec-dark dark:border-primary-light'>
+                                <h3 className="text-center leading-normal normal-case ">Sorry, We're out of requests for now. <br /> Please try again soon! 😓😢</h3>
+                            </div>
+
+                        )}
                     </section>
+
                 ) : (
                     <>
                         <RecipeSection title="Recipes of the Day" recipes={dayRecipes} icon='flame' iconClasses='text-red' />

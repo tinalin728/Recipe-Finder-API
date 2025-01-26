@@ -15,15 +15,34 @@ function App() {
     return saved ? JSON.parse(saved) : [];
   });
 
-  const toggleFav = (recipeID) => {
-    const updatedFavs = savedFavs.includes(recipeID)
-      ? savedFavs.filter((favId) => favId !== recipeID)
-      : [...savedFavs, recipeID];
+  // const toggleFav = (recipeID) => {
+  //   const updatedFavs = savedFavs.includes(recipeID)
+  //     ? savedFavs.filter((favId) => favId !== recipeID)
+  //     : [...savedFavs, recipeID];
 
-    //console.log("Updated Favs:", updatedFavs); 
-    localStorage.setItem('favs', JSON.stringify(updatedFavs));
-    setSavedFavs(updatedFavs);
+  //   //console.log("Updated Favs:", updatedFavs); 
+  //   localStorage.setItem('favs', JSON.stringify(updatedFavs));
+  //   setSavedFavs(updatedFavs);
+  // };
+  const toggleFav = (recipe) => {
+    let favs = JSON.parse(localStorage.getItem('favs')) || [];
+
+    // Check if the recipe already exists
+    const exists = favs.some(fav => fav.id === recipe.id);
+
+    if (exists) {
+      // Remove the recipe if already in favorites
+      favs = favs.filter(fav => fav.id !== recipe.id);
+    } else {
+      // Add the full recipe object
+      favs.push(recipe);
+    }
+
+    localStorage.setItem('favs', JSON.stringify(favs));
+    setSavedFavs(favs);
   };
+
+
 
   const [groceryList, setGroceryList] = useState(() => {
     // Load saved list from localStorage
@@ -57,7 +76,7 @@ function App() {
         <Route path='/' element={<Browse savedFavs={savedFavs} toggleFav={toggleFav} />} />
         <Route path='/list' element={<List groceryList={groceryList} removeIngredient={removeIngredient} />} />
         <Route path='/favorite' element={<Fav savedFavs={savedFavs} toggleFav={toggleFav} />} />
-        <Route path='/recipe/:id' element={<Detail addIngredients={addIngredients} />} />
+        <Route path='/recipe/:id' element={<Detail addIngredients={addIngredients} savedFavs={savedFavs} toggleFav={toggleFav} />} />
       </Routes>
     </Router>
   )

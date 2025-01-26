@@ -3,7 +3,14 @@ import { Link, useParams } from 'react-router-dom';
 import IonIcon from '@reacticons/ionicons';
 
 const RecipeCard = ({ recipe, placeholder, handleFavClick, isFavorite }) => {
-    const imageUrl = recipe.image ? recipe.image.replace(/-\d+x\d+/, '-480x360') : placeholder;
+    const baseImageUrl = "https://img.spoonacular.com/recipes/";
+
+    const imageUrl = recipe.image
+        ? (recipe.image.startsWith('http')
+            ? recipe.image
+            : `${baseImageUrl}${recipe.image}`)
+        : placeholder;
+
 
     return (
         <Link
@@ -16,7 +23,7 @@ const RecipeCard = ({ recipe, placeholder, handleFavClick, isFavorite }) => {
                     onError={(e) => { e.target.src = placeholder }}
                     alt="recipe image"
                     loading='lazy'
-                    className='w-full h-[180px] object-cover cursor-pointer md:h-[250px]' />
+                    className='w-full min-h-[200px] object-cover cursor-pointer md:min-h-[250px]' />
                 <button
                     onClick={(e) => {
                         e.stopPropagation();
@@ -32,7 +39,7 @@ const RecipeCard = ({ recipe, placeholder, handleFavClick, isFavorite }) => {
             </div>
 
 
-            <div className='flex-1 px-2 py-2 md:px-6 md:py-4'>
+            <div className='flex-1 px-2 py-2 md:p-4'>
                 {recipe.cuisines && recipe.cuisines.length > 0 ? (
                     <p>
                         {recipe.cuisines.map((cuisine, index) => (
@@ -49,15 +56,15 @@ const RecipeCard = ({ recipe, placeholder, handleFavClick, isFavorite }) => {
             </div>
 
 
-            <div className='hidden md:block md:border-t md:dark:border-primary-light'>
+            <div className='border-t dark:border-primary-light'>
                 <div className='flex justify-between items-stretch'>
-                    <div className='flex items-center gap-2 py-4 px-6'>
+                    <div className='flex items-center gap-2 p-4'>
                         <IonIcon name='alarm' className='text-[28px]' />
-                        <p> {recipe.readyInMinutes} Mins</p>
+                        <p className='text-nowrap'> {recipe.readyInMinutes} Mins</p>
                     </div>
 
-                    <div className='flex items-center border-l border-black px-6 py-4 text-black bg-primary-light hover:bg-accent-darker dark:border-l-primary-light  dark:bg-primary-dark dark:text-white transition duration-500'>
-                        <p>View Now</p>
+                    <div className='flex items-center border-l border-black p-4 text-black bg-primary-light hover:bg-accent-darker dark:border-l-primary-light  dark:bg-primary-dark dark:text-white transition duration-500'>
+                        <p className='text-nowrap'>View Now</p>
                     </div>
                 </div>
             </div>
