@@ -21,7 +21,7 @@ export default function Browse({ toggleFav, savedFavs }) {
     const [filteredRecipes, setFilteredRecipes] = useState(null);
     const [showFiltered, setShowFiltered] = useState(false);
     const filters = [
-        { name: 'Rice', light: rice, dark: riceWhite },
+        { name: 'rice', light: rice, dark: riceWhite },
         { name: 'Noodle', light: noodles, dark: noodlesWhite },
         { name: 'Burger', light: burger, dark: burgerWhite },
         { name: 'Vegetarian', light: vegetarian, dark: vegetarianWhite }
@@ -29,7 +29,7 @@ export default function Browse({ toggleFav, savedFavs }) {
 
     const [selectedFilter, setSelectedFilter] = useState(null);
     const [searchTerm, setSearchTerm] = useState("");
-    // const apiKey = 'cf116ecafaab4cda83a585339c3346de';
+    const [loading, setLoading] = useState(true);
 
     // Fetch initial categories only (not filters)
     const { recipes: dayRecipes, isLoading: dayLoading } = fetchRecipes("recipesOfTheDay", "", "random");
@@ -39,6 +39,7 @@ export default function Browse({ toggleFav, savedFavs }) {
     //function for second fetch if initial fetch has no recipe.extendedIngredients
     const fetchDetailedRecipe = async (recipe) => {
         if (!recipe.id) return recipe; // Ensure the recipe has an ID
+        setLoading(true);
 
         try {
             const response = await fetch(`https://api.spoonacular.com/recipes/${recipe.id}/information?apiKey=${apiKey}&includeNutrition=false`);
@@ -46,9 +47,12 @@ export default function Browse({ toggleFav, savedFavs }) {
 
             const detailedRecipe = await response.json();
             return detailedRecipe.extendedIngredients ? detailedRecipe : recipe; // Return the detailed recipe if it has extendedIngredients
+
         } catch (error) {
             console.error("Error fetching detailed recipe details:", error);
             return recipe; // Return the original recipe if fetch fails
+        } finally {
+            setLoading(false);
         }
     };
 
@@ -57,12 +61,14 @@ export default function Browse({ toggleFav, savedFavs }) {
     const handleFilter = async (filter) => {
         setSelectedFilter(filter);
         setShowFiltered(true);
+        setLoading(true);
 
         const storageKey = `filtered_${filter}`;
         const storedRecipes = getStoredData(storageKey);
 
         if (storedRecipes) {
             setFilteredRecipes(storedRecipes);
+            setLoading(false);
             return;
         }
 
@@ -74,16 +80,18 @@ export default function Browse({ toggleFav, savedFavs }) {
 
             if (data.results && data.results.length > 0) {
                 const fullRecipes = await Promise.all(data.results.map(fetchDetailedRecipe));
-
                 setFilteredRecipes(fullRecipes);
                 storeData(storageKey, fullRecipes);
+
             } else {
                 console.error("No recipes found for this filter.");
                 setFilteredRecipes([]);
             }
         } catch (error) {
             console.error("Error fetching recipes:", error);
-            // return null;
+        } finally {
+            setLoading(false);
+
         }
     };
 
@@ -93,12 +101,15 @@ export default function Browse({ toggleFav, savedFavs }) {
         if (!searchTerm.trim()) return;
         setShowFiltered(true);
         setSelectedFilter(null);
+        setLoading(true);
 
         const storageKey = `search_${searchTerm}`;
         const storedRecipes = getStoredData(storageKey)
 
         if (storedRecipes) {
             setFilteredRecipes(storedRecipes);
+            setLoading(false);
+
             return;
         }
 
@@ -113,12 +124,15 @@ export default function Browse({ toggleFav, savedFavs }) {
 
                 setFilteredRecipes(fullRecipes);
                 storeData(storageKey, fullRecipes);
+
             } else {
                 console.error("No recipes found for the search term.");
                 setFilteredRecipes([]);
             }
         } catch (error) {
             console.error("Error fetching recipes:", error);
+        } finally {
+            setLoading(false);
         }
     };
 
@@ -236,23 +250,28 @@ export default function Browse({ toggleFav, savedFavs }) {
 
                 {showFiltered ? (
                     <section className='pb-[6rem] lg:pt-2'>
-                        {filteredRecipes?.length > 0 ? (
-                            <div className='grid gap-4 md:grid-cols-2 md:gap-6 lg:grid-cols-3 lg:gap-y-10 2xl:grid-cols-4'>
-                                {filteredRecipes.map((recipe) => (
-                                    <RecipeCard
-                                        key={recipe.id}
-                                        recipe={recipe}
-                                        placeholder={placeholder}
-                                        isFavorite={savedFavs.includes(recipe.id)}
-                                        handleFavClick={() => toggleFav(recipe.id)}
-                                    />
-                                ))}
+                        {loading ? (
+                            <div className="flex justify-center items-center h-full">
+                                <h3 className="">Loading...</h3>
                             </div>
                         ) : (
-                            <div className='flex justify-center items-center py-20 border border-dashed bg-gray-50 h-[50vh] dark:bg-sec-dark dark:border-primary-light'>
-                                <h3 className="text-center leading-normal normal-case ">Sorry, We're out of requests for now. <br /> Please try again soon! 😓😢</h3>
-                            </div>
-
+                            filteredRecipes?.length > 0 ? (
+                                <div className='grid gap-4 md:grid-cols-2 md:gap-6 lg:grid-cols-3 lg:gap-y-10 2xl:grid-cols-4'>
+                                    {filteredRecipes.map((recipe) => (
+                                        <RecipeCard
+                                            key={recipe.id}
+                                            recipe={recipe}
+                                            placeholder={placeholder}
+                                            isFavorite={savedFavs.includes(recipe.id)}
+                                            handleFavClick={() => toggleFav(recipe.id)}
+                                        />
+                                    ))}
+                                </div>
+                            ) : (
+                                <div className='flex justify-center items-center py-20 border border-dashed bg-gray-50 h-[50vh] dark:bg-sec-dark dark:border-primary-light'>
+                                    <h3 className="text-center leading-normal normal-case ">Sorry, We're out of requests for now. <br /> Please try again soon! 😓😢</h3>
+                                </div>
+                            )
                         )}
                     </section>
 
