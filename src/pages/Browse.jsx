@@ -92,6 +92,7 @@ export default function Browse({ toggleFav, savedFavs }) {
     const searchRecipes = async () => {
         if (!searchTerm.trim()) return;
         setShowFiltered(true);
+        setSelectedFilter(null);
 
         const storageKey = `search_${searchTerm}`;
         const storedRecipes = getStoredData(storageKey)

@@ -13,15 +13,7 @@ function App() {
     return saved ? JSON.parse(saved) : [];
   });
 
-  // const toggleFav = (recipeID) => {
-  //   const updatedFavs = savedFavs.includes(recipeID)
-  //     ? savedFavs.filter((favId) => favId !== recipeID)
-  //     : [...savedFavs, recipeID];
 
-  //   //console.log("Updated Favs:", updatedFavs); 
-  //   localStorage.setItem('favs', JSON.stringify(updatedFavs));
-  //   setSavedFavs(updatedFavs);
-  // };
   const toggleFav = (recipe) => {
     let favs = JSON.parse(localStorage.getItem('favs')) || [];
 
