@@ -48,18 +48,18 @@ export default function Detail({ addIngredients, savedFavs, toggleFav }) {
                                 <div className='flex gap-4 w-full flex-wrap flex-row xl:flex-nowrap flex-none'>
                                     <div className='flex gap-4 w-full '>
                                         <div className='border px-4 py-2 flex gap-2 w-full text-nowrap bg-primary-light dark:bg-sec-dark dark:border-white'>
-                                            <IonIcon name='alarm' className='text-2xl text-sec-light' />
+                                            <IonIcon name='alarm' className='text-2xl' />
                                             <p>{recipe.readyInMinutes} Mins</p>
                                         </div>
 
                                         <div className='border px-4 py-2 text-nowrap flex gap-2 w-full bg-primary-light dark:bg-sec-dark dark:border-white'>
-                                            <IonIcon name='happy-outline' className='text-2xl text-sec-light' />
+                                            <IonIcon name='happy' className='text-2xl' />
                                             <p>{recipe.servings} Servings</p>
                                         </div>
                                     </div>
 
                                     <div className='border px-4 py-2 flex gap-2 w-full bg-primary-light dark:bg-sec-dark dark:border-white'>
-                                        <IonIcon name='information-circle' className='text-2xl text-sec-light' />
+                                        <IonIcon name='information-circle' className='text-2xl' />
                                         <ul className='flex gap-2'>
                                             {recipe.diets && recipe.diets.length > 0 ? (recipe.diets.map((diet, index) => (
                                                 <li key={index} className='list-none lg:text-nowrap'>

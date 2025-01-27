@@ -1,11 +1,9 @@
 import React, { useEffect, useState } from 'react'
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom'
 import Navbar from './components/Navbar'
-import Footer from './components/Footer'
 import Browse from './pages/Browse'
 import Fav from "./pages/Fav"
 import Detail from "./pages/Detail"
-import Home from './pages/Home'
 import List from './pages/List'
 
 

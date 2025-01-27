@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import IonIcon from '@reacticons/ionicons';
-import list from '../../public/assets/list.jpg'
 
 export default function List({ groceryList, removeIngredient }) {
     const [newItem, setNewItem] = useState('');
@@ -22,16 +21,6 @@ export default function List({ groceryList, removeIngredient }) {
         groceryList.push(newItem); // Push new item to the list
         setNewItem(''); // Clear the input field
     };
-    const background = {
-        backgroundImage: `url(${list})`,
-        backgroundSize: 'cover',
-        backgroundPosition: 'left top',
-        backgroundRepeat: 'no-repeat',
-        width: '100%',
-        minHeight: '100vh',
-        height: 'auto'
-    };
-
 
 
     return (
