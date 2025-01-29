@@ -39,7 +39,6 @@ export default function Browse({ toggleFav, savedFavs }) {
     //function for second fetch if initial fetch has no recipe.extendedIngredients
     const fetchDetailedRecipe = async (recipe) => {
         if (!recipe.id) return recipe; // Ensure the recipe has an ID
-        setLoading(true);
 
         try {
             const response = await fetch(`https://api.spoonacular.com/recipes/${recipe.id}/information?apiKey=${apiKey}&includeNutrition=false`);
@@ -51,8 +50,6 @@ export default function Browse({ toggleFav, savedFavs }) {
         } catch (error) {
             console.error("Error fetching detailed recipe details:", error);
             return recipe; // Return the original recipe if fetch fails
-        } finally {
-            setLoading(false);
         }
     };
 
@@ -151,10 +148,15 @@ export default function Browse({ toggleFav, savedFavs }) {
                 <h3 className="text-black dark:text-white normal-case leading-normal font-semibold">{title}</h3>
             </div>
 
-            {recipes && recipes.length > 0 ? (
+            {dayLoading || winterLoading ? (
+                <div className="flex justify-center items-center h-[50vh]">
+                    <h3 className="text-center">Loading...</h3>
+                </div>
+            ) : recipes && recipes.length > 0 ? (
                 <div className='grid gap-4 md:grid-cols-2 md:gap-6 lg:grid-cols-3 2xl:grid-cols-4'>
                     {recipes.map((recipe) => (
-                        <RecipeCard key={recipe.id}
+                        <RecipeCard
+                            key={recipe.id}
                             recipe={recipe}
                             placeholder={placeholder}
                             isFavorite={savedFavs.some((fav) => fav.id === recipe.id)}
@@ -163,12 +165,22 @@ export default function Browse({ toggleFav, savedFavs }) {
                     ))}
                 </div>
             ) : (
-                <h3 className="py-20 text-center border border-gray-500 border-dashed bg-gray-50 h-full normal-case dark:bg-sec-dark dark:border-primary-light ">
-                    {recipes ? "Sorry, We're out of requests for now. Please try again soon! 😓😢" : "Loading..."}
-                </h3>
+                <div className='flex justify-center items-center py-20 border border-dashed bg-gray-50 h-[50vh] dark:bg-sec-dark dark:border-primary-light'>
+                    <h3 className="text-center leading-normal normal-case">
+                        Sorry, We're out of requests for now. <br /> Please try again soon! 😓😢
+                    </h3>
+                </div>
             )}
+
         </section>
+
     );
+    useEffect(() => {
+        console.log("Day Recipes:", dayRecipes);
+        console.log("Winter Comfort Food:", winterComfortFood);
+        console.log("Loading state:", dayLoading, winterLoading);
+    }, [dayRecipes, winterComfortFood, dayLoading, winterLoading]);
+
 
 
     return (

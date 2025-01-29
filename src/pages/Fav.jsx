@@ -13,9 +13,7 @@ export default function Fav({ savedFavs = [], toggleFav }) {
         // Retrieve full recipes from localStorage
         const storedFavs = JSON.parse(localStorage.getItem('favs')) || [];
 
-        if (storedFavs.length > 0) {
-            setFavRecipes(storedFavs);
-        }
+        setFavRecipes(storedFavs);
 
         setLoading(false);
     }, [savedFavs]);  // Re-run if savedFavs changes
@@ -30,15 +28,17 @@ export default function Fav({ savedFavs = [], toggleFav }) {
                 {loading ? (
                     <p className="text-center text-gray-500">Loading...</p>
                 ) : favRecipes.length === 0 ? (
-                    <div className="text-center h-screen">
-                        <h1 className="p-2 inline-block">Time to build your recipes</h1>
+
+                    <div className="text-center h-[80vh] flex flex-col gap-4 justify-center items-center">
+                        <h1 className="p-2">Time to build your recipes</h1>
                         <button
                             onClick={() => navigate('/')}
-                            className="mt-4 px-6 py-2 bg-accent text-white rounded-md hover:bg-accent-darker"
+                            className="mt-4 px-6 py-2 border bg-accent rounded-md hover:bg-accent-darker"
                         >
                             Back to Home Page
                         </button>
                     </div>
+
                 ) : (
                     <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6 2xl:grid-cols-4">
                         {favRecipes.map((recipe) => (

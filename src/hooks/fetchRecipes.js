@@ -14,8 +14,9 @@ const fetchRecipes = (key, query, apiType) => {
             const storedRecipes = getStoredData(key);
             const lastFetchDate = localStorage.getItem(`${key}_date`) || "";
 
-            console.log(`Stored recipes for ${key}:`, storedRecipes);
-            console.log(`Last fetch date for ${key}:`, lastFetchDate);
+            // console.log(`Stored recipes for ${key}:`, storedRecipes);
+            // console.log(`Last fetch date for ${key}:`, lastFetchDate);
+            setIsLoading(true);
 
             let initialRecipes = [];
 
