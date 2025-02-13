@@ -175,11 +175,12 @@ export default function Browse({ toggleFav, savedFavs }) {
         </section>
 
     );
-    useEffect(() => {
-        console.log("Day Recipes:", dayRecipes);
-        console.log("Winter Comfort Food:", winterComfortFood);
-        console.log("Loading state:", dayLoading, winterLoading);
-    }, [dayRecipes, winterComfortFood, dayLoading, winterLoading]);
+
+    // useEffect(() => {
+    //     console.log("Day Recipes:", dayRecipes);
+    //     console.log("Winter Comfort Food:", winterComfortFood);
+    //     console.log("Loading state:", dayLoading, winterLoading);
+    // }, [dayRecipes, winterComfortFood, dayLoading, winterLoading]);
 
 
 

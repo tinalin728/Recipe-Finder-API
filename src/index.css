@@ -7,7 +7,7 @@
 
     /* Light Mode */
     body {
-        @apply bg-light-bg text-black font-lato dark:bg-dark-bg dark:text-primary-light transition-colors duration-300;
+        @apply font-lato bg-light-bg text-black dark:bg-dark-bg dark:text-primary-light transition-colors duration-300;
     }
 
     header {
@@ -15,7 +15,7 @@
     }
 
     .max-w-container {
-        max-width: 110rem;
+        /* max-width: 110rem; */
         margin: 0 auto;
         overflow-x: hidden;
         @apply px-5 md:px-6 lg:px-8
@@ -34,27 +34,27 @@
     }
 
     h1 {
-        @apply text-3xl md:text-4xl lg:text-5xl font-montserrat font-medium
+        @apply text-3xl md:text-4xl lg:text-5xl font-montserrat font-medium leading-normal
     }
 
     h2 {
-        @apply text-2xl md:text-3xl lg:text-4xl font-montserrat leading-normal
+        @apply text-2xl md:text-3xl lg:text-4xl font-montserrat font-medium leading-normal
     }
 
     h3 {
-        @apply text-base font-montserrat uppercase md:text-xl
+        @apply text-base font-montserrat font-medium uppercase md:text-xl
     }
 
     h4 {
         @apply text-[20px] text-white font-lato font-light
     }
 
-    p {
-        @apply leading-[28px]
+    span, p {
+        @apply leading-[28px] text-base md:text-lg
     }
 
     li {
-        @apply list-disc font-montserrat
+        @apply list-disc text-base md:text-lg
     }
 
 
@@ -154,4 +154,20 @@
         z-index: 1;
         filter: brightness(2);
     }
+
+    .list-border {
+        border-radius: 200px 25px 200px 45px / 25px 200px 35px 200px;
+    }
+
+    .custom-number-input::-webkit-inner-spin-button,
+    .custom-number-input::-webkit-outer-spin-button {
+        -webkit-appearance: none !important;
+        margin: 0;
+    }
+
+    .custom-number-input {
+        -moz-appearance: textfield !important;
+        /* Firefox */
+    }
+
 }

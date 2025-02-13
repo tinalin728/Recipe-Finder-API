@@ -4,12 +4,17 @@ import { useParams, useLocation } from 'react-router-dom'
 import IonIcon from '@reacticons/ionicons';
 import placeholder from '../../public/assets/noImg.jpg'
 
+import DuplicateCheckModal from '../components/modalMesages/DuplicateCheckModal';
+import ConfirmationModal from '../components/modalMesages/ConfirmationModal';
 
-export default function Detail({ addIngredients, savedFavs, toggleFav }) {
 
-    const [isAdded, setIsAdded] = useState(false);
+export default function Detail({ savedFavs, toggleFav, updateGroceryList, setModalOpen, modalOpen, modalMessage, setModalMessage, confirmModalOpen, confirmMessage, setConfirmModalOpen, setConfirmMessage, pendingIngredient, setPendingIngredient }) {
+
     const location = useLocation();
     const { id } = useParams();
+
+    const [isAdded, setIsAdded] = useState(false);
+
 
     const recipeId = location.state?.id || id;
     const apiType = location.state?.apiType || "recipes";
@@ -18,7 +23,141 @@ export default function Detail({ addIngredients, savedFavs, toggleFav }) {
     // const [recipe, setDetailedRecipe] = useState(null);
     const [isLoading, setIsLoading] = useState(false);
 
-    const handleAddToList = () => {
+
+    const handleAddToList = (selectedIngredients) => {
+        if (!Array.isArray(selectedIngredients) || selectedIngredients.length === 0) {
+            console.error("Invalid input in handleAddToList:", selectedIngredients);
+            return;
+        }
+
+        let lists = JSON.parse(localStorage.getItem("lists")) || { Grocery: [], Fridge: [] };
+        let groceryList = Array.isArray(lists.Grocery) ? lists.Grocery : [];
+        let fridgeList = Array.isArray(lists.Fridge) ? lists.Fridge : [];
+
+        let newItemsAdded = [];
+        let duplicateItems = [];
+
+        selectedIngredients.forEach((ingredient) => {
+            let trimmedIngredient = ingredient?.trim();
+            if (!trimmedIngredient) return;
+
+            let groceryIndex = groceryList.findIndex(item => item?.name?.toLowerCase() === trimmedIngredient.toLowerCase());
+            let fridgeIndex = fridgeList.findIndex(item => item?.name?.toLowerCase() === trimmedIngredient.toLowerCase());
+
+            let existingGrocery = groceryIndex !== -1 ? groceryList[groceryIndex] : null;
+            let existingFridge = fridgeIndex !== -1 ? fridgeList[fridgeIndex] : null;
+
+            if (existingGrocery || existingFridge) {
+                duplicateItems.push({
+                    name: trimmedIngredient,
+                    groceryAmount: existingGrocery ? existingGrocery.amount : 0,
+                    fridgeAmount: existingFridge ? existingFridge.amount : 0,
+                    newAmount: existingGrocery ? existingGrocery.amount + 1 : 1, // ✅ Correct new amount
+                });
+            } else {
+                newItemsAdded.push({ name: trimmedIngredient, amount: 1 }); // ✅ Store as object
+            }
+        });
+
+        if (duplicateItems.length > 0) {
+            // Show duplicate confirmation first
+            let message = duplicateItems.map(item => {
+                let parts = [];
+                if (item.groceryAmount > 0) {
+                    parts.push(`${item.groceryAmount} ${item.name} in your grocery list`);
+                }
+                if (item.fridgeAmount > 0) {
+                    parts.push(`${item.fridgeAmount} ${item.name} in your fridge`);
+                }
+                return `You already have ${parts.join(" and ")}. Would you like to update your Grocery list?`;
+            }).join("<br><br>");
+
+            setModalMessage(message);
+            setPendingIngredient({ duplicateItems, newItemsAdded }); // ✅ Store both new and duplicate items for later update
+            setModalOpen(true);
+        } else {
+            // No duplicates, proceed with adding new items immediately
+            handleConfirmUpdate({ duplicateItems: [], newItemsAdded });
+        }
+    };
+
+    // This function is called only AFTER the user confirms duplicates
+    const handleConfirmUpdate = (pendingData) => {
+        if (!pendingData || !pendingData.duplicateItems) {
+            console.warn("handleConfirmUpdate: No pending data available.");
+            return;
+        }
+
+        let lists = JSON.parse(localStorage.getItem("lists")) || { Grocery: [], Fridge: [] };
+        let groceryList = Array.isArray(lists.Grocery) ? lists.Grocery : [];
+
+        if (pendingData.duplicateItems.length > 0) {
+            pendingData.duplicateItems.forEach(item => {
+                let index = groceryList.findIndex(groceryItem => groceryItem.name === item.name);
+                if (index !== -1) {
+                    groceryList[index].amount = item.newAmount;
+                } else {
+                    groceryList.push({ name: item.name, amount: item.newAmount });
+                }
+            });
+        }
+
+        if (pendingData.newItemsAdded.length > 0) {
+            groceryList.push(...pendingData.newItemsAdded);
+        }
+
+        lists.Grocery = groceryList;
+        localStorage.setItem("lists", JSON.stringify(lists));
+        updateGroceryList(groceryList);
+
+        let confirmMessage = [...pendingData.duplicateItems, ...pendingData.newItemsAdded].map(item =>
+            `Updated: You now have ${item.newAmount || item.amount} ${item.name} in your grocery list.`
+        ).join("<br>");
+
+        setConfirmMessage(confirmMessage);
+        setConfirmModalOpen(true);
+        setTimeout(() => setConfirmModalOpen(false), 2000);
+
+        setModalOpen(false);
+        setPendingIngredient(null);
+    };
+
+
+    // This is triggered when the user clicks "Yes" in the duplicate confirmation modal
+    const handleDuplicateConfirm = () => {
+        if (!pendingIngredient) return;
+
+        handleConfirmUpdate(pendingIngredient);
+    };
+
+    //  This is triggered when the user clicks "Cancel" in the duplicate confirmation modal
+    const handleDuplicateCancel = () => {
+        setModalOpen(false);
+        setPendingIngredient([]);
+    };
+
+
+    const handleAddToListClick = (e) => {
+        e.preventDefault();
+
+        const form = e.target.closest("form");
+        if (!form) {
+            console.error("handleAddToListClick: No form found.");
+            return;
+        }
+
+        const selectedIngredients = Array.from(form.elements)
+            .filter((el) => el.checked && el.value?.trim() !== "")
+            .map((el) => el.value.trim());
+
+        // console.log("Debug: Selected Ingredients before sending:", selectedIngredients);
+
+        if (!selectedIngredients.length) {
+            console.warn("No valid ingredients found.");
+            return;
+        }
+
+        handleAddToList(selectedIngredients);
         setIsAdded(true);
         setTimeout(() => setIsAdded(false), 2000);
     };
@@ -45,7 +184,7 @@ export default function Detail({ addIngredients, savedFavs, toggleFav }) {
                                     <h1 className=''>{recipe.title}</h1>
                                 </div>
 
-                                <div className='flex gap-4 w-full flex-wrap flex-row xl:flex-nowrap flex-none'>
+                                <div className='flex gap-4 w-full flex-wrap flex-row flex-none'>
                                     <div className='flex gap-4 w-full '>
                                         <div className='border px-4 py-2 flex gap-2 w-full text-nowrap bg-primary-light dark:bg-sec-dark dark:border-white'>
                                             <IonIcon name='alarm' className='text-2xl' />
@@ -60,9 +199,9 @@ export default function Detail({ addIngredients, savedFavs, toggleFav }) {
 
                                     <div className='border px-4 py-2 flex gap-2 w-full bg-primary-light dark:bg-sec-dark dark:border-white'>
                                         <IonIcon name='information-circle' className='text-2xl' />
-                                        <ul className='flex gap-2'>
+                                        <ul className='flex gap-2 text-nowrap'>
                                             {recipe.diets && recipe.diets.length > 0 ? (recipe.diets.map((diet, index) => (
-                                                <li key={index} className='list-none lg:text-nowrap'>
+                                                <li key={index} className='list-none'>
                                                     {diet}
                                                     {index < recipe.diets.length - 1 && ','}
                                                 </li>
@@ -75,7 +214,7 @@ export default function Detail({ addIngredients, savedFavs, toggleFav }) {
                                 </div>
 
                                 <div className='p-4 border h-full relative flex-grow bg-primary-light dark:bg-sec-dark dark:border-white'>
-                                    <div className='absolute top-0 left-0 bg-sec-light text-white w-full p-2 border-b dark:border-b-primary-light'>
+                                    <div className='absolute top-0 left-0 bg-sec-light w-full p-2 border-b dark:border-b-primary-light'>
                                         <h3>About</h3>
                                     </div>
                                     <div className='h-full mt-10'>
@@ -98,14 +237,14 @@ export default function Detail({ addIngredients, savedFavs, toggleFav }) {
                                     ${savedFavs.some(fav => fav.id === recipe.id) ? 'text-red' : 'text-white'}
                                     `} />
                             </button>
-                            <img src={recipe.image || placeholder} alt="recipe img" className='w-full object-cover lg:h-full' />
+                            <img src={recipe.image || placeholder} alt="recipe img" className='w-full object-cover h-full' />
                         </div>
                     </div>
 
                     <div className='flex flex-col-reverse gap-4 w-full lg:flex-row'>
                         <div className='border basis-[65%] bg-primary-light dark:bg-sec-dark dark:border-white'>
                             <div className='relative p-4'>
-                                <div className='absolute top-0 left-0 bg-sec-light text-white w-full p-2 border-b dark:border-b-primary-light'>
+                                <div className='absolute top-0 left-0 bg-sec-light w-full p-2 border-b dark:border-b-primary-light'>
                                     <h3>Instructions</h3>
                                 </div>
 
@@ -124,49 +263,75 @@ export default function Detail({ addIngredients, savedFavs, toggleFav }) {
                         </div>
 
                         <div className="border py-4 relative w-full basis-[35%] bg-primary-light dark:bg-sec-dark dark:border-white">
-                            <div className="absolute top-0 left-0 bg-sec-light text-white w-full p-2 border-b dark:border-b-primary-light">
+                            <div className="absolute top-0 left-0 bg-sec-light w-full p-2 border-b dark:border-b-primary-light">
                                 <h3>Ingredients</h3>
                             </div>
                             <form
                                 onSubmit={(e) => {
                                     e.preventDefault();
-                                    const selectedIngredients = Array.from(e.target.elements)
-                                        .filter((el) => el.checked)
-                                        .map((el) => el.value);
 
-                                    addIngredients(selectedIngredients);
-                                    handleAddToList();
+                                    const selectedIngredients = Array.from(e.target.elements)
+                                        .filter((el) => el.checked && el.value?.trim() !== "")
+                                        .map((el) => el.value.trim());
+
+                                    if (!selectedIngredients.length) {
+                                        console.warn("⚠️ No ingredients selected.");
+                                        return;
+                                    }
+
+                                    handleAddToList(selectedIngredients);
                                 }}
                             >
 
+
                                 <ul className="pl-4 mt-10">
-                                    {recipe.extendedIngredients.map((item) => (
-                                        <li key={item.id} className="my-4 flex items-center detail-input">
+                                    {recipe.extendedIngredients.map((item, index) => (
+                                        <li key={`${item.id}-${index}`} className="my-4 flex items-center detail-input">
                                             <input
                                                 type="checkbox"
                                                 id={`ingredient-${item.id}`}
-                                                value={`${item.amount} ${item.unit} ${item.name}`}
+                                                value={`${item.name}`}
                                                 className="mr-2 w-4 h-4 cursor-pointer"
                                             />
                                             <label
                                                 htmlFor={`ingredient-${item.id}`}
                                                 className="cursor-pointer"
                                             >
-                                                <span className='text-yellow-800 dark:text-yellow-100'>{item.amount} {item.unit} </span>  {item.name}
+                                                <span className=''>{item.amount} {item.unit} </span>
+                                                <span className='font-medium'>
+                                                    {item.name}
+                                                </span>
                                             </label>
                                         </li>
                                     ))}
                                 </ul>
 
                                 <button
+                                    onClick={handleAddToListClick}
                                     type="submit"
-                                    className="mt-4 ml-4 px-4 py-2 bg-accent text-black rounded-lg border hover:bg-accent-darker transition"
+                                    className="mt-4 ml-4 px-4 py-2 bg-accent text-black rounded-lg border hover:bg-accent-darker transition uppercase tracking-wide"
                                 >
-                                    {isAdded ? 'Added to the list' : 'Add to list'}
+                                    Add To Grocery List
                                 </button>
                             </form>
-
                         </div>
+
+                        <DuplicateCheckModal
+                            isOpen={modalOpen}
+                            message={modalMessage}
+                            onConfirm={handleDuplicateConfirm}
+                            onCancel={() => {
+                                setModalOpen(false);
+                                setPendingIngredient([]);
+                            }}
+                        />
+
+                        <ConfirmationModal
+                            isOpen={confirmModalOpen}
+                            message={confirmMessage}
+                            onClose={() => setConfirmModalOpen(false)}
+                        />
+
 
                     </div>
                 </section>

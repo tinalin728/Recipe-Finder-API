@@ -22,7 +22,7 @@ export default function Navbar() {
 
 
     return (
-        <header className='lg:fixed lg:top-0 lg:h-full lg:max-w-[200px] lg:w-full z-[999] shadow-md'>
+        <header className='lg:fixed lg:top-0 lg:h-full lg:max-w-[210px] lg:w-full z-[999] shadow-md'>
             {/* mobile */}
             <div className='block lg:hidden fixed bottom-0 z-[999] w-full border-t py-3 bg-white dark:bg-primary-dark dark:text-primary-light dark:border-t-primary-light dark:border-opacity-20'>
                 <nav className='max-w-container'>

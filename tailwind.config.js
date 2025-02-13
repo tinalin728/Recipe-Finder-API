@@ -17,11 +17,12 @@ export default {
         DEFAULT: 'black'
       },
       colors: {
-        'accent': '#dcf763',
+        'accent': '#C7F115',
         'accent-darker': '#C5E053',
-        'light-bg': '#f1f2ee',
+        'grey': '#DEDEDE',
+        'light-bg': '#e7e9e7',
         'primary-light': '#f9f9f9',
-        'sec-light': '#bfb7b6',
+        'sec-light': '#DEDEDE',
 
         'red': '#FE5B63',
 
