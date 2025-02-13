@@ -55,30 +55,35 @@ export default function Detail({ savedFavs, toggleFav, updateGroceryList, setMod
                     newAmount: existingGrocery ? existingGrocery.amount + 1 : 1, // ✅ Correct new amount
                 });
             } else {
-                newItemsAdded.push({ name: trimmedIngredient, amount: 1 }); // ✅ Store as object
+                newItemsAdded.push({ name: trimmedIngredient, amount: 1 }); // Store as object
             }
         });
 
         if (duplicateItems.length > 0) {
-            // Show duplicate confirmation first
             let message = duplicateItems.map(item => {
                 let parts = [];
-                if (item.groceryAmount > 0) {
-                    parts.push(`${item.groceryAmount} ${item.name} in your grocery list`);
+
+                let groceryItem = lists.Grocery.find(grocery => grocery.name.toLowerCase() === item.name.toLowerCase());
+                let fridgeItem = lists.Fridge.find(fridge => fridge.name.toLowerCase() === item.name.toLowerCase());
+
+                if (groceryItem && fridgeItem) {
+                    parts.push(`${groceryItem.amount} ${item.name} in your grocery list and ${fridgeItem.amount} in your fridge.`);
+                } else if (groceryItem) {
+                    parts.push(`${groceryItem.amount} ${item.name} in your grocery list.`);
+                } else if (fridgeItem) {
+                    parts.push(`${fridgeItem.amount} ${item.name} in your fridge.`);
                 }
-                if (item.fridgeAmount > 0) {
-                    parts.push(`${item.fridgeAmount} ${item.name} in your fridge`);
-                }
-                return `You already have ${parts.join(" and ")}. Would you like to update your Grocery list?`;
-            }).join("<br><br>");
+
+                return `You already have ${parts.join(" ")} Would you like to update your grocery list?`;
+            }).join("<br>");
 
             setModalMessage(message);
-            setPendingIngredient({ duplicateItems, newItemsAdded }); // ✅ Store both new and duplicate items for later update
+            setPendingIngredient({ duplicateItems, newItemsAdded });
             setModalOpen(true);
         } else {
-            // No duplicates, proceed with adding new items immediately
             handleConfirmUpdate({ duplicateItems: [], newItemsAdded });
         }
+
     };
 
     // This function is called only AFTER the user confirms duplicates
@@ -109,14 +114,16 @@ export default function Detail({ savedFavs, toggleFav, updateGroceryList, setMod
         lists.Grocery = groceryList;
         localStorage.setItem("lists", JSON.stringify(lists));
         updateGroceryList(groceryList);
+        let confirmMessageParts = [...pendingData.duplicateItems, ...pendingData.newItemsAdded]
+            .map(item => `${item.newAmount || item.amount} ${item.name}`)
+            .join(", ");
 
-        let confirmMessage = [...pendingData.duplicateItems, ...pendingData.newItemsAdded].map(item =>
-            `Updated: You now have ${item.newAmount || item.amount} ${item.name} in your grocery list.`
-        ).join("<br>");
+        let finalConfirmMessage = `Updated: You now have ${confirmMessageParts} in your grocery list.`;
 
-        setConfirmMessage(confirmMessage);
+        setConfirmMessage(finalConfirmMessage);
         setConfirmModalOpen(true);
         setTimeout(() => setConfirmModalOpen(false), 2000);
+
 
         setModalOpen(false);
         setPendingIngredient(null);
@@ -199,9 +206,9 @@ export default function Detail({ savedFavs, toggleFav, updateGroceryList, setMod
 
                                     <div className='border px-4 py-2 flex gap-2 w-full bg-primary-light dark:bg-sec-dark dark:border-white'>
                                         <IonIcon name='information-circle' className='text-2xl' />
-                                        <ul className='flex gap-2 text-nowrap'>
+                                        <ul className='flex gap-2 flex-wrap'>
                                             {recipe.diets && recipe.diets.length > 0 ? (recipe.diets.map((diet, index) => (
-                                                <li key={index} className='list-none'>
+                                                <li key={index} className='list-none text-nowrap'>
                                                     {diet}
                                                     {index < recipe.diets.length - 1 && ','}
                                                 </li>

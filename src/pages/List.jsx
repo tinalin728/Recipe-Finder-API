@@ -219,7 +219,7 @@ export default function List({ lists, setLists, setModalMessage, setModalOpen, s
     const renderList = (listName, additionalClasses = "") => (
         <div className={`border py- 10 min-h-[80vh] bg-white md:flex-1 ${activeList === listName ? 'block' : 'hidden'} ${additionalClasses}`}>
             <h3 className='mt-4 px-4 py-2 border capitalize border-dashed w-fit mx-auto rounded-lg'>
-                {listName === 'Grocery' ? 'Time to Restock 💸' : 'Chillin’ in the Fridge 🧊'}
+                {listName === 'Grocery' ? 'Grocery List 💸' : 'Chillin’ in the Fridge 🧊'}
             </h3>
             <ul className='px-3 md:px-4 mt-4'>
                 {lists[listName].length === 0 ? (
@@ -308,12 +308,12 @@ export default function List({ lists, setLists, setModalMessage, setModalOpen, s
                                 </div>
 
                                 {dropDown && (
-                                    <ul className="absolute bg-white z-50 border top-12 md:top-14 md:w-full">
-                                        <li onClick={() => handleSelect('Grocery', 'bag-outline')} className='list-none p-4 hover:bg-gray-200 cursor-pointer '>
+                                    <ul className="absolute bg-white z-50 border top-full md:w-full">
+                                        <li onClick={() => handleSelect('Grocery', 'bag-outline')} className='list-none p-4 hover:bg-gray-300 cursor-pointer '>
                                             <IonIcon name='bag-outline' className='mr-2 text-lg' />
                                             <span>Grocery </span>
                                         </li>
-                                        <li onClick={() => handleSelect('Fridge', 'home-outline')} className='list-none p-4 hover:bg-green-200 cursor-pointer '>
+                                        <li onClick={() => handleSelect('Fridge', 'home-outline')} className='list-none p-4 hover:bg-blue-300 cursor-pointer '>
                                             <IonIcon name='home-outline' className='mr-2 text-lg' />
                                             <span>
                                                 Fridge
@@ -329,7 +329,7 @@ export default function List({ lists, setLists, setModalMessage, setModalOpen, s
                                 onChange={(e) => setNewItem(e.target.value)}
                                 onKeyDown={(e) => {
                                     if (e.key === "Enter") {
-                                        e.preventDefault(); // ✅ Prevents accidental form submission
+                                        e.preventDefault();
                                         handleAddItem(e);
                                     }
                                 }}
