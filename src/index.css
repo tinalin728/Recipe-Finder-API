@@ -57,6 +57,17 @@
         @apply list-disc text-base md:text-lg
     }
 
+    /* Hide default checkbox */
+    .custom-checkbox {
+        appearance: none;
+        width: 20px;
+        height: 20px;
+        /* Default border color */
+        border-radius: 4px;
+        background-color: white;
+        position: relative;
+        cursor: pointer;
+    }
 
 
     .detail-input input[type="checkbox"] {

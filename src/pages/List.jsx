@@ -216,9 +216,19 @@ export default function List({ lists, setLists, setModalMessage, setModalOpen, s
         });
     };
 
+    const handleToggleCheck = (index, listName) => {
+        setLists((prevLists) => {
+            const updatedList = prevLists[listName].map((item, i) =>
+                i === index ? { ...item, checked: !item.checked } : item
+            );
+            return { ...prevLists, [listName]: updatedList };
+        });
+    };
+
+
     const renderList = (listName, additionalClasses = "") => (
-        <div className={`border py- 10 min-h-[80vh] bg-white md:flex-1 ${activeList === listName ? 'block' : 'hidden'} ${additionalClasses}`}>
-            <h3 className='mt-4 px-4 py-2 border capitalize border-dashed w-fit mx-auto rounded-lg'>
+        <div className={`border py- 10 min-h-[80vh] bg-white dark:bg-sec-dark md:flex-1 ${activeList === listName ? 'block' : 'hidden'} ${additionalClasses}`}>
+            <h3 className='mt-4 px-4 py-2 border capitalize border-dashed border-black dark:border-white w-fit mx-auto rounded-lg'>
                 {listName === 'Grocery' ? 'Grocery List 💸' : 'Chillin’ in the Fridge 🧊'}
             </h3>
             <ul className='px-3 md:px-4 mt-4'>
@@ -229,7 +239,7 @@ export default function List({ lists, setLists, setModalMessage, setModalOpen, s
                     </p>
                 ) : (
                     lists[listName].map((item, index) => (
-                        <li key={index} className="py-4 border-b border-dashed dark:border-b-white list-none md:px-2">
+                        <li key={index} className="py-4 border-b border-dashed border-black dark:border-white dark:border-b-white list-none md:px-2">
                             <div className='flex items-center justify-between'>
                                 {editingItem && editingItem.listName === listName && editingItem.index === index ? (
                                     <form onSubmit={handleSaveEdit} className='flex items-center gap-2 w-full'>
@@ -257,6 +267,14 @@ export default function List({ lists, setLists, setModalMessage, setModalOpen, s
                                 ) : (
                                     <>
                                         <label className='flex items-center gap-2'>
+                                            {listName === 'Grocery' && (
+                                                <input
+                                                    type="checkbox"
+                                                    checked={item.checked || false}
+                                                    onChange={() => handleToggleCheck(index, listName)}
+                                                    className="custom-checkbox"
+                                                />
+                                            )}
                                             {item.amount} {item.name}
                                         </label>
                                         <div className='flex items-center gap-2'>
@@ -286,10 +304,10 @@ export default function List({ lists, setLists, setModalMessage, setModalOpen, s
 
                 <div className='h-full mt-10 flex-1 relative z-50'>
                     <div className='flex flex-col  gap-2 mb-4 md:flex-row md:gap-0 md:h-[55px]'>
-                        <div onSubmit={handleAddItem} className="bg-white w-full inline-flex items-center  border h-[55px] p-0">
+                        <div onSubmit={handleAddItem} className="bg-white dark:bg-sec-dark w-full inline-flex items-center  border border-black dark:border-white h-[55px] p-0">
                             <div
                                 onClick={handleDropDown}
-                                className='text-nowrap relative border-r h-full'>
+                                className='text-nowrap relative border-r border-r-black dark:border-white h-full'>
                                 <div className='flex justify-center items-center relative px-2 md:min-w-[130px] h-full'>
                                     {selectedList.icon ? (<>
                                         <IonIcon name={selectedList.icon} className="text-lg p-2" />
@@ -308,7 +326,7 @@ export default function List({ lists, setLists, setModalMessage, setModalOpen, s
                                 </div>
 
                                 {dropDown && (
-                                    <ul className="absolute bg-white z-50 border top-full md:w-full">
+                                    <ul className="absolute bg-white dark:bg-sec-dark z-50 border top-full md:w-full">
                                         <li onClick={() => handleSelect('Grocery', 'bag-outline')} className='list-none p-4 hover:bg-gray-300 cursor-pointer '>
                                             <IonIcon name='bag-outline' className='mr-2 text-lg' />
                                             <span>Grocery </span>
@@ -341,7 +359,7 @@ export default function List({ lists, setLists, setModalMessage, setModalOpen, s
                                 <button
                                     type="button"
                                     onClick={() => setNewAmount((prev) => Math.max(1, prev - 1))}
-                                    className="px-3 py-1  rounded-full bg-gray-200 hover:bg-gray-300"
+                                    className="px-3 py-1  rounded-full bg-gray-200 dark:bg-dark-bg hover:bg-gray-300"
                                 >
                                     -
                                 </button>
@@ -349,13 +367,13 @@ export default function List({ lists, setLists, setModalMessage, setModalOpen, s
                                     type="number"
                                     value={newAmount}
                                     onChange={(e) => setNewAmount(Math.max(1, parseInt(e.target.value) || 1))}
-                                    className="w-10 h-full text-center appearance-none custom-number-input"
+                                    className="w-10 h-full text-center appearance-none custom-number-input dark:bg-transparent"
                                 />
 
                                 <button
                                     type="button"
                                     onClick={() => setNewAmount((prev) => prev + 1)}
-                                    className="px-3 py-1 rounded-full bg-gray-200 hover:bg-gray-300"
+                                    className="px-3 py-1 rounded-full bg-gray-200 dark:bg-dark-bg hover:bg-gray-300"
                                 >
                                     +
                                 </button>
@@ -374,7 +392,7 @@ export default function List({ lists, setLists, setModalMessage, setModalOpen, s
                     <div className='flex w-full md:hidden'>
                         <button
                             onClick={() => setActiveList("Grocery")}
-                            className={`w-full py-2 border-r border-l border-t inline-flex justify-center items-center ${activeList === "Grocery" ? "bg-gray-300" : ""
+                            className={`w-full py-2 border-r border-l border-t border-black dark:border-white inline-flex justify-center items-center ${activeList === "Grocery" ? "bg-gray-300" : ""
                                 }`}
                         >
                             <IonIcon name='bag-outline' className='mr-2 text-lg' />
